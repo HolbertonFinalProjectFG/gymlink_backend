@@ -1,51 +1,65 @@
-const { sequelize } = require('../database/database.js')
-const { DataTypes } = require('sequelize')
-const { gym } = require('./gym.js')
-const { user_role } = require('/user_role.js')
+// const { sequelize } = require('../database/database.js')
+// const { DataTypes } = require('sequelize')
+// const { gym } = require('./gym.js')
+// const { user_role } = require('./user_role.js')
 
-const users = sequelize.define('users', {
-    user_id: {
-        type: Datatypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    name: {
-        type: DataTypes.STRING(50)
-    },
-    surname: {
-        type: DataTypes.STRING(50)
-    },
-    email: {
-        type: DataTypes.STRING(30)
-    },
-    password: {
-        type: DataTypes.STRING(30)
-    },
-    _phone_number: {
-      type: DataTypes.STRING(50)
-    },
-    emergency_number: {
-        type: DataTypes.STRING(50)
-    }
-});
+// const users = sequelize.define('users', {
+//     user_id: {
+//         type: DataTypes.INTEGER,
+//         primaryKey: true,
+//         autoIncrement: true
+//     },
+//     name: {
+//         type: DataTypes.STRING(50),
+//         required: true
+//     },
+//     surname: {
+//         type: DataTypes.STRING(50),
+//         required: true
+//     },
+//     email: {
+//         type: DataTypes.STRING(30),
+//         required: true,
+//         unique: true
+//     },
+//     password: {
+//         type: DataTypes.STRING(30),
+//         required: true,
+//         allowNull: true
+//     },
+//     _phone_number: {
+//       type: DataTypes.STRING(50),
+//       required: true
+//     },
+//     emergency_number: {
+//         type: DataTypes.STRING(50),
+//         required: true
+//     }
+// });
 
-users.belongsTo(gym, {
-    foreignKey: 'gym_id',
-    targetId: 'gym_id'
-})
 
-users.hasMany(user_role, {
-    foreignKey: 'user_id',
-    sourceKey: 'user_id'
-})
 
-users.hasMany(user_routines, {
-    foreignKey: 'user_id',
-    sourceKey: 'user_id'
-})
+// users.hasMany(user_role, {
+//     foreignKey: 'user_id',
+//     sourceKey: 'user_id'
+// })
 
-users.hasMany()
+// users.hasMany(user_routines, {
+//     foreignKey: 'user_id',
+//     sourceKey: 'user_id'
+// })
 
-module.exports = {
-    users
-}
+// users.hasMany(clients_trainers, {
+//     foreignKey: 'client_user_id',
+//     sourceKey: 'user_id',
+// });
+  
+// users.hasMany(clients_trainers, {
+//     foreignKey: 'trainer_user_id',
+//     sourceKey: 'user_id',
+// });
+
+
+// module.exports = {
+//     users
+// }

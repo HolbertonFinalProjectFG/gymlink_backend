@@ -9,10 +9,3 @@ const sequelize = new Sequelize(POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, {
 module.exports = {
   sequelize
 }
-
-
-
-
-
-
-

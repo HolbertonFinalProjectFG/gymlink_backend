@@ -1,11 +1,15 @@
-const { sequelize } = require('../database/database.js')
-const { DataTypes } = require('sequelize')
+// const { sequelize } = require('../database/database.js')
+// const { DataTypes } = require('sequelize')
 
-sequelize.define('user_routines', {
-    user_id: {
-        type: Datatypes.INTEGER
-    },
-    trainer_user_id: {
-        type: Datatypes.INTEGER
-    }
-})
+// const user_routines = sequelize.define('user_routines', {
+//     user_id: {
+//         type: DataTypes.INTEGER
+//     },
+//     trainer_user_id: {
+//         type: DataTypes.INTEGER
+//     }
+// })
+
+// module.exports = {
+//     user_routines
+// }
