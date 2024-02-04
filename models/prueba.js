@@ -43,7 +43,7 @@ const roles = sequelize.define('roles', {
 })
 
 const routines_templates = sequelize.define('routines_templates', {
-    routine_id: {
+    routines_template_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -66,16 +66,11 @@ const routines = sequelize.define('routines', {
     }
 });
 
-const user_role = sequelize.define('user_rol')
+const user_roles = sequelize.define('user_roles')
+user_roles.removeAttribute('id');
 
-const user_routines = sequelize.define('user_routines', {
-    user_id: {
-        type: DataTypes.INTEGER
-    },
-    trainer_user_id: {
-        type: DataTypes.INTEGER
-    }
-})
+const user_routines = sequelize.define('user_routines')
+user_routines.removeAttribute('id');
 
 const users = sequelize.define('users', {
     user_id: {
@@ -93,8 +88,7 @@ const users = sequelize.define('users', {
     },
     email: {
         type: DataTypes.STRING(30),
-        required: true,
-        unique: true
+        required: true
     },
     password: {
         type: DataTypes.STRING(30),
@@ -113,15 +107,15 @@ const users = sequelize.define('users', {
 
 
 
-users.hasMany(user_role, {
+users.hasMany(user_roles, {
     foreignKey: 'user_id',
     sourceKey: 'user_id'
-})
+});
 
 users.hasMany(user_routines, {
-    foreignKey: 'user_id',
+    foreignKey: 'client_user_id',
     sourceKey: 'user_id'
-})
+});
 
 users.hasMany(clients_trainers, {
     foreignKey: 'client_user_id',
@@ -136,7 +130,7 @@ users.hasMany(clients_trainers, {
 clients_trainers.belongsTo(users, {
     foreignKey: 'client_user_id',
     targetKey: 'user_id',
-  });
+});
   
 clients_trainers.belongsTo(users, {
     foreignKey: 'trainer_user_id',
@@ -153,19 +147,19 @@ gym.hasMany(routines_templates, {
     socrceKey: 'gym_id',
 });
 
-roles.hasMany(user_role, {
+roles.hasMany(user_roles, {
     foreignKey: 'role_id',
     sourceKey: 'role_id'
-})
+});
 
-user_role.belongsTo(roles, {
+user_roles.belongsTo(roles, {
     foreignKey: 'role_id',
     targetId: 'role_id'
-})
+});
 
 routines_templates.hasMany(routines, {
-    foreignKey: 'routine_id',
-    sourceKey: 'routine_id',
+    foreignKey: 'routines_template_id',
+    sourceKey: 'routines_template_id',
 });
 
 routines_templates.belongsTo(gym, {
@@ -173,22 +167,18 @@ routines_templates.belongsTo(gym, {
     sourceKey: 'gym_id'
 });
 
-user_role.belongsTo(users, {
+user_roles.belongsTo(users, {
     foreignKey: 'user_id',
     targetId: 'user_id'
-})
-
-user_role.belongsTo(roles, {
-    foreignKey: 'role_id',
-    targetId: 'role_id'
-})
+});
 
 routines.hasMany(user_routines, {
     foreignKey: 'routine_id',
     sourceKey: 'routine_id'
-})
+});
 
 routines.belongsTo(routines_templates, {
-    foreignKey: 'routine_id',
-    sourceKey: 'routine_id'
-})
+    foreignKey: 'routines_template_id',
+    targetId: 'routines_template_id'
+});
+
