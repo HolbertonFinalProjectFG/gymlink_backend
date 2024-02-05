@@ -17,6 +17,9 @@
          type: DataTypes.STRING(50),
          required: true
      },
+     'C.I.': {
+        type: DataTypes.STRING(50),
+     },
      email: {
          type: DataTypes.STRING(30),
          required: true,
@@ -27,7 +30,7 @@
          required: true,
          allowNull: true
      },
-     _phone_number: {
+     phone_number: {
        type: DataTypes.STRING(50),
        required: true
      },

@@ -4,7 +4,7 @@ const { routines } = require('./routines.js')
 const { gym } = require('./gym.js')
 
 const routines_templates = sequelize.define('routines_templates', {
-    routine_id: {
+    routine_template_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
@@ -12,9 +12,6 @@ const routines_templates = sequelize.define('routines_templates', {
     content: {
         type: DataTypes.JSON,
     },
-    gym_id: {
-        type: DataTypes.INTEGER,
-    }
 });
 
 module.exports = {
