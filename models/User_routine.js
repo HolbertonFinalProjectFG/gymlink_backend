@@ -1,10 +1,10 @@
 const { sequelize } = require('../database/database.js')
 const { DataTypes } = require('sequelize')
 
-const user_routines = sequelize.define('user_routines')
+const User_routine = sequelize.define('user_routines')
 
-user_routines.removeAttribute('id')
+User_routine.removeAttribute('id')
 
 module.exports = {
-     user_routines
+     User_routine
 }

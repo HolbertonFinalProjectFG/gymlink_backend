@@ -1,9 +1,7 @@
 const { sequelize } = require('../database/database.js')
 const { DataTypes } = require('sequelize')
-const { users } = require('./users.js')
 
-
-const clients_trainers = sequelize.define('clients_trainers', {
+const Client_trainer = sequelize.define('clients_trainers', {
     client_user_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -19,9 +17,9 @@ const clients_trainers = sequelize.define('clients_trainers', {
             model: 'users',
             key: 'user_id',
         },
-    }
-})
+    },
+});
 
 module.exports = {
-    clients_trainers
-}
+    Client_trainer
+};

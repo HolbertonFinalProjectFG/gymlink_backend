@@ -1,9 +1,7 @@
 const { sequelize } = require('../database/database.js');
 const { DataTypes } = require('sequelize');
-const { users } = require('./users.js');
-const { routines_templates } = require('./routines_templates.js');
 
-const gym = sequelize.define('gym', {
+const Gym = sequelize.define('gym', {
     gym_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -15,5 +13,5 @@ const gym = sequelize.define('gym', {
 });
 
 module.exports = {
-    gym
+    Gym
 }

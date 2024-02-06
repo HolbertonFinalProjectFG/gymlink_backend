@@ -1,8 +1,7 @@
  const { sequelize } = require('../database/database.js')
  const { DataTypes } = require('sequelize');
- const { user_routines } = require('./user_routines.js')
- const { routines_templates } = require('./routines_templates.js')
- const routines = sequelize.define('routines', {
+
+ const Routine = sequelize.define('routines', {
      routine_id: {
          type: DataTypes.INTEGER,
          primaryKey: true,
@@ -14,5 +13,5 @@
  });
 
  module.exports = {
-     routines
+     Routine
  }

@@ -1,9 +1,7 @@
  const { sequelize } = require('../database/database.js')
  const { DataTypes } = require('sequelize')
- const { gym } = require('./gym.js')
- const { user_role } = require('./user_roles.js')
 
- const users = sequelize.define('users', {
+ const User = sequelize.define('users', {
      user_id: {
          type: DataTypes.INTEGER,
          primaryKey: true,
@@ -19,6 +17,8 @@
      },
      ci: {
         type: DataTypes.STRING(50),
+        required: true,
+        unique: true
      },
      email: {
          type: DataTypes.STRING(30),
@@ -37,9 +37,13 @@
      emergency_number: {
          type: DataTypes.STRING(50),
          required: true
+     },
+     insurance_number: {
+        type: DataTypes.STRING(50),
+        required: true
      }
  });
  
  module.exports = {
-     users
+     User
  }

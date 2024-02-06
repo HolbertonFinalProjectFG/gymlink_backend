@@ -1,23 +1,33 @@
 const { sequelize } = require('./database/database')
 const express = require('express')
 const { PORT } = require('./config.js')
-const { gym } = require('./models/gym.js')
-const { clients_trainers } = require('./models/clients_trainers.js')
-const { routines_templates } = require('./models/routines_templates.js')
-const { routines } = require('./models/routines.js')
-const { user_role } = require('./models/user_roles.js')
-const { user_routines } = require('./models/user_routines.js')
-const { users } = require('./models/users.js')
-const { roles } = require('./models/roles.js')
-const { relations } = require('./models/relations.js')
+const { Gym } = require('./models/Gym.js')
+const { Client_trainer } = require('./models/Client_trainer.js')
+const { Routine_template } = require('./models/Routine_template.js')
+const { Routine } = require('./models/Routine.js')
+const { User_role } = require('./models/User_role.js')
+const { User_routine } = require('./models/User_routine.js')
+const { User } = require('./models/User.js')
+const { Role } = require('./models/Role.js')
+const { Relation } = require('./models/Relation.js')
+const { Inventory } = require('./models/Inventory.js')
+
+
+const { User: userRouter } = require('./routes/User.js')
+const { Inventory: inventoryRouter } = require('./routes/inventory_routes.js')
 
 const app = express()
+
+app.use(express.json());
+
+app.use("/api/user", userRouter)
+app.use("/api/inventory", inventoryRouter)
 
 app.listen(PORT, () => {
     console.log(`Server running in port ${PORT}`)
 })
 
 async function main() {
-    await sequelize.sync({ force: true })
+    await sequelize.sync()
 }
 main()

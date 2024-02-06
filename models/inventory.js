@@ -1,8 +1,7 @@
 const { sequelize } = require('../database/database.js');
 const { DataTypes } = require('sequelize');
-const { gym } = require('./gym.js');
 
-const inventory = sequelize.define('inventory', {
+const Inventory = sequelize.define('inventory', {
     item_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -11,9 +10,13 @@ const inventory = sequelize.define('inventory', {
 
     item_name: {
         type: DataTypes.STRING(100)
+    },
+
+    quantity: {
+        type: DataTypes.INTEGER
     }
 })
 
 module.exports = {
-    inventory
+    Inventory
 }
