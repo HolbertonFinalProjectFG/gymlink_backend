@@ -1,6 +1,8 @@
 const e = require('express');
 const sequelize = require('../database/database.js')
 const {User} = require('../models/User.js')
+const { userUpdateSchema } = require('../schemas/User.js')
+const { z } = require('zod');
 
 const getAllUsers = async(req, res) => {
   try{
@@ -31,7 +33,6 @@ const getUsersWithRole = async(req, res) => {
 
 const deleteUser = async(req, res) => {
   try {
-    console.log(req.params)
     const { user_id } = req.params;
     await User.destroy({
       where: {
@@ -96,23 +97,27 @@ const postNewUser = async(req, res) => {
   res.status(statusFunction.status).json(statusFunction.msgStatus);
 }
 
-//const putUsersData = async (req, res) => {
-//    const { user_id } = req.params
-//    const data = req.body
-//    Object.keys(data).forEach((element) => {
-//        if (element)
-//    })
-//    await User.update(data, {
-//        where: {
-//          user_id: id
-//        }
-//    });
-//}
+const putUsersData = async (req, res) => {
+  const { user_id } = req.params
+  const data = req.body
+  const checkedData = userUpdateSchema.parse(req.body)
+  console.log(checkedData)
+  await User.update(checkedData, {
+    where: {
+      user_id
+    }
+  });
+  res.status(200)
+  res.json({
+    "ok": true,
+    "msg": 'Client correctly updated'
+  })  
+}
 
 module.exports = {
     getAllUsers,
     getUsersWithRole,
     deleteUser,
     postNewUser,
-   // putUsersData
+    putUsersData
 }

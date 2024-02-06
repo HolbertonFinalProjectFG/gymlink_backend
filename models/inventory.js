@@ -9,14 +9,14 @@ const Inventory = sequelize.define('inventory', {
     },
 
     item_name: {
-        type: DataTypes.STRING(100)
+        type: DataTypes.STRING(100),
     },
 
     quantity: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
     }
 })
 
 module.exports = {
-    Inventory
+    Inventory,
 }
