@@ -6,6 +6,7 @@
      routine_id: {
          type: DataTypes.INTEGER,
          primaryKey: true,
+         autoIncrement: true,
      },
      personalized_content: {
          type: DataTypes.JSON,

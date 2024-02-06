@@ -17,7 +17,7 @@
          type: DataTypes.STRING(50),
          required: true
      },
-     'C.I.': {
+     ci: {
         type: DataTypes.STRING(50),
      },
      email: {
