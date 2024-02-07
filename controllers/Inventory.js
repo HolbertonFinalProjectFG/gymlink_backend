@@ -95,9 +95,31 @@ const putInventoryData = async (req, res) => {
     }
 }
 
+const deleteObjInventory = async(req, res) => {
+  try {
+    const { item_id } = req.params;
+    const item = await Inventory.findByPk(item_id);  
+    if (item !== null) {
+      await item.destroy();
+    res.status(200).json({
+      "ok": true,
+      "msg": `Item with id ${item_id} deleted succesfully`
+    });
+    } else {
+      res.status(404).json({
+        "ok": true,
+        "msg": "item_id doesn't exists"
+      });
+    }
+  } catch {
+    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  }
+};
+
 module.exports = {
     getObjInventory,
     postObjInventory,
     putInventoryData,
-    getObjById
+    getObjById,
+    deleteObjInventory
 }
