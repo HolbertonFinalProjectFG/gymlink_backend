@@ -1,6 +1,8 @@
 const e = require('express');
 const sequelize = require('../database/database.js')
 const { Inventory } = require('../models/Inventory.js');
+const { itemUpdateSchema } = require('../schemas/Inventory.js');
+const { ZodError } = require('zod');
 
 const getObjInventory = async(req, res) => {
     try{
@@ -10,6 +12,16 @@ const getObjInventory = async(req, res) => {
       res.status(500).json({ok: false, msg: "An error ocurred on server side"});
     }
   };
+
+const getObjById = async(req, res) => {
+  try {
+    const { item_id } = req.params;
+    const item = await Inventory.findByPk(item_id);
+    res.status(200).json({ok: true, data: [ item ]});
+  } catch {
+    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  }
+};
 
 
 const postObjInventory = async(req, res) => {
@@ -39,7 +51,53 @@ const postObjInventory = async(req, res) => {
     res.status(statusFunction.status).json(statusFunction.msgStatus);
 }
 
+const putInventoryData = async (req, res) => {
+  try {
+    const { item_id } = req.params
+    const checkedData = itemUpdateSchema.parse(req.body)
+    if (Object.keys(checkedData).length == 0){
+      throw new ZodError('Nothing to update / Cannot update that value')
+    }
+    const item = await Inventory.findByPk(item_id)
+    if (item === null) {
+      throw new Error('Item does not exist')
+    }
+    for (key in item.dataValues){
+      if(checkedData[key] && checkedData[key] === item.dataValues[key])
+      {
+        throw new ZodError('Cannot update field with the same value')
+      }
+    }
+    await User.update(checkedData, {
+      where: {
+        item_id
+      }
+    });
+    res.status(200)
+    res.json({
+      ok: true,
+      msg: 'Item correctly updated'
+    })  
+    } 
+    catch(err) {
+      if (err instanceof(ZodError)) {
+        res.status(400).json({
+          ok: false,
+          error: 'express-validator errors'
+        })
+      }
+      else {
+        res.status(500).json({
+          ok: false,
+          error: 'Something failed on server side'
+        })
+      }
+    }
+}
+
 module.exports = {
     getObjInventory,
-    postObjInventory
+    postObjInventory,
+    putInventoryData,
+    getObjById
 }

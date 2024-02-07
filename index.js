@@ -12,11 +12,17 @@ app.use(express.json());
 app.use("/api/user", userRouter)
 app.use("/api/inventory", inventoryRouter)
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await sequelize.sync()
+    try {
+    await Role.bulkCreate([
+        {role_name: "superuser"},
+        {role_name: "admin"},
+        {role_name: "trainer"},
+        {role_name: "client"},
+        {role_name: "employee"},
+    ])
+    } catch {}
+    console.log("Tables created and roles added")
     console.log(`Server running in port ${PORT}`)
 })
-
-async function main() {
-    await sequelize.sync()
-}
-main()
