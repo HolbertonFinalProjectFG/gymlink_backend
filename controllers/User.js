@@ -88,29 +88,30 @@ const postNewUser = async(req, res) => {
       statusFunction.msgStatus.msg = 'User correctly added';
 
       // const json = JSON.parse(statusFunction);
-      res.status(statusFunction.status).json(statusFunction.msgStatus);
+      res.status(statusFunction.status)
+      res.json(statusFunction.msgStatus);
     }
     
-    const deleteUser = async(req, res) => {
-      try {
-        const { user_id } = req.params;
-        const users = await User.findByPk(user_id);  
-        if (users !== null) {
-          await users.destroy();
-        res.status(200).json({
-          'ok': true,
-          'msg': 'User with id ${user_id} deleted succesfully'
-        });
-        } else {
-          res.status(404).json({
-            'ok': true,
-            'msg': "client_id doesn't exists"
-          });
-        }
-      } catch {
-        res.status(500).json({ok: false, msg: "An error ocurred on server side"});
-      }
-    };
+const deleteUser = async(req, res) => {
+  try {
+    const { user_id } = req.params;
+    const users = await User.findByPk(user_id);  
+    if (users !== null) {
+      await users.destroy();
+    res.status(200).json({
+      'ok': true,
+      'msg': `User with id ${user_id} deleted succesfully`
+    });
+    } else {
+      res.status(404).json({
+        'ok': false,
+        'msg': "client_id doesn't exists"
+      });
+    }
+  } catch {
+    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  }
+};
 
 const putUsersData = async (req, res) => {
   try {
@@ -126,7 +127,7 @@ const putUsersData = async (req, res) => {
     for (key in user.dataValues){
       if(checkedData[key] && checkedData[key] === user.dataValues[key])
       {
-        throw new ZodError('Cannot update field with the same value')
+        throw new ZodError(`Cannot update field with the same value\nActual ${key}: ${user.dataValues[key]}, new ${key}: ${checkedData[key]}`)
       } 
     }
     await User.update(checkedData, {

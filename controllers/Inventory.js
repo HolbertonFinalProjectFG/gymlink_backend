@@ -8,7 +8,8 @@ const getObjInventory = async(req, res) => {
     try{
       const items = await Inventory.findAll();
       res.status(200).json({ok: true, data: items});
-    } catch {
+    } catch (err){
+      console.log(err)
       res.status(500).json({ok: false, msg: "An error ocurred on server side"});
     }
   };
@@ -51,10 +52,32 @@ const postObjInventory = async(req, res) => {
     res.status(statusFunction.status).json(statusFunction.msgStatus);
 }
 
+
+const deleteObjInventory = async(req, res) => {
+  try {
+    const { item_id } = req.params;
+    const item = await Inventory.findByPk(item_id);  
+    if (item !== null) {
+      await item.destroy();
+    res.status(200).json({
+      "ok": true,
+      "msg": `Item with id ${item_id} deleted succesfully`
+    });
+  } else {
+    res.status(404).json({
+      "ok": false,
+      "msg": "item_id doesn't exists"
+    });
+  }
+} catch {
+  res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+}
+};
+
 const putInventoryData = async (req, res) => {
   try {
     const { item_id } = req.params
-    const checkedData = itemUpdateSchema.parse(req.body)
+    const checkedData = itemUpdateSchema.partial().parse(req.body)
     if (Object.keys(checkedData).length == 0){
       throw new ZodError('Nothing to update / Cannot update that value')
     }
@@ -68,7 +91,7 @@ const putInventoryData = async (req, res) => {
         throw new ZodError('Cannot update field with the same value')
       }
     }
-    await User.update(checkedData, {
+    await Inventory.update(checkedData, {
       where: {
         item_id
       }
@@ -78,44 +101,23 @@ const putInventoryData = async (req, res) => {
       ok: true,
       msg: 'Item correctly updated'
     })  
-    } 
-    catch(err) {
-      if (err instanceof(ZodError)) {
-        res.status(400).json({
-          ok: false,
-          error: 'express-validator errors'
-        })
-      }
-      else {
-        res.status(500).json({
-          ok: false,
-          error: 'Something failed on server side'
-        })
-      }
+  } 
+  catch(err) {
+    console.log(err)
+    if (err instanceof(ZodError)) {
+      res.status(400).json({
+        ok: false,
+        error: 'express-validator errors'
+      })
     }
-}
-
-const deleteObjInventory = async(req, res) => {
-  try {
-    const { item_id } = req.params;
-    const item = await Inventory.findByPk(item_id);  
-    if (item !== null) {
-      await item.destroy();
-    res.status(200).json({
-      "ok": true,
-      "msg": `Item with id ${item_id} deleted succesfully`
-    });
-    } else {
-      res.status(404).json({
-        "ok": true,
-        "msg": "item_id doesn't exists"
-      });
+    else {
+      res.status(500).json({
+        ok: false,
+        error: 'Something failed on server side'
+      })
     }
-  } catch {
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
-};
-
+}
 module.exports = {
     getObjInventory,
     postObjInventory,
