@@ -1,4 +1,4 @@
-const { sequelize } = require('./database/database')
+const { sequelize } = require('./database/database.js')
 const express = require('express')
 const { PORT } = require('./config.js')
 const { Gym , Client_trainer , Routine_template , Routine,User_role , User_routine , User , Role , Relation , Inventory} = require('./models/index.js')
