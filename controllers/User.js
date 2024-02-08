@@ -1,6 +1,7 @@
 const e = require('express');
 const sequelize = require('../database/database.js')
 const {User} = require('../models/User.js')
+const {Role} = require ('../models/Role.js')
 const { User_role } = require('../models/User_role.js')
 const { userUpdateSchema, userSchema } = require('../schemas/User.js')
 const { ZodError} = require('zod');
@@ -15,30 +16,47 @@ const getAllUsers = async(req, res) => {
 };
 
 const getUserById = async(req, res) => {
+  const { user_id } = req.params;
   try {
-    const { user_id } = req.params;
-    const users = await User.findByPk(user_id);
-    res.status(200).json({ok: true, data: [ users ]});
+    const users = await User.findAll({
+      where: {
+        user_id: user_id
+      }
+    });
+    const roles = await User_role.findAll({
+      where: {
+        user_id: user_id
+      }
+    });
+    
+    const roleNames = roles.map(role => role.role_id);
+
+    const usersWithRoles = users.map(user => ({
+      ...user.toJSON(), // Convert Sequelize instance to plain object
+      roles: roleNames
+    }));
+
+    res.status(200).json({ok: true, data: usersWithRoles   });
   } catch {
     res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };
 
 const getUsersByRole = async(req, res) => {
-  const roleId = req.params;
+  const { role_id } = req.params;
   try {
     const users = await User.findAll({
       include: {
-        model: Role,
+        model: User_role,
         where: {
-          id: roleId
+          role_id: role_id
         }
       }
     });
     res.status(200).json({ok: true, data: users});
 
-  } catch {
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  } catch (error) {
+    res.status(500).json({ok: false, msg: "An error ocurred on server side", error: error.message});
   }
 }
 
