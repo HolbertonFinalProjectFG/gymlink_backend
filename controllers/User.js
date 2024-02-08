@@ -1,7 +1,8 @@
 const e = require('express');
 const sequelize = require('../database/database.js')
 const {User} = require('../models/User.js')
-const { userUpdateSchema } = require('../schemas/User.js')
+const { User_role } = require('../models/User_role.js')
+const { userUpdateSchema, userSchema } = require('../schemas/User.js')
 const { ZodError} = require('zod');
 
 const getAllUsers = async(req, res) => {
@@ -41,56 +42,27 @@ const getUsersByRole = async(req, res) => {
   }
 }
 
-
 const postNewUser = async(req, res) => {
-  const {
-    name,
-    surname,
-    ci,
-    email,
-    password,
-    phone_number,
-    emergency_number,
-    insurance_number,
-    role
-  } = req.body;
-  let statusFunction = {
-    status: 0,
-    msgStatus: {}
-  }
-  try{    
-    if (2 === 1) { // Zod autentication
-      statusFunction.status = 400;
-      statusFunction.msgStatus.ok = false;
-      statusFunction.msgStatus.error = 'express-validator errors';
-      // const json = JSON.parse(statusFunction);
-      res.status(statusFunction.status).json(statusFunction.msgStatus);
-    }
-      await User.create({
-          name,
-          surname,
-          ci,
-          email,
-          password,
-          phone_number,
-          emergency_number,
-          insurance_number,
-        });
-      } catch(err) {
-        statusFunction.status = 500;
-        statusFunction.msgStatus.ok = false;
-        statusFunction.msgStatus.msg = err;
-        // const json = JSON.parse(statusFunction);
-        res.status(statusFunction.status).json(statusFunction.msgStatus);
-      }
-      statusFunction.status = 200;
-      statusFunction.msgStatus.ok = true;
-      statusFunction.msgStatus.msg = 'User correctly added';
+  const { role_id } = req.body
+  try{
+    userSchema.parse(req.body);
 
-      // const json = JSON.parse(statusFunction);
-      res.status(statusFunction.status)
-      res.json(statusFunction.msgStatus);
+    const newUser = await User.create(req.body);
+    const numOfRoles = role_id.length;
+
+    for (let i = 0; i < numOfRoles; i++) {
+      User_role.create({user_id: newUser.user_id, role_id: role_id[i]});
     }
+    res.status(200).json({ok: true, msg: 'User correctly added'});
+  } catch(err) {
+    if (err instanceof ZodError) {
+      const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}))
+      res.status(400).json(msgErr);
+    } else {
+      res.status(500).json({ok: false, msg: "error"})
+    };
+  }
+}
     
 const deleteUser = async(req, res) => {
   try {

@@ -24,34 +24,21 @@ const getObjById = async(req, res) => {
   }
 };
 
-
 const postObjInventory = async(req, res) => {
-    const { item_name, quantity } = req.body;
-    let statusFunction = {
-        status: 0,
-        msgStatus: {}
+  const { item_name, quantity } = req.body;
+  try{
+    inventorySchema.parse({item_name, quantity});
+    await Inventory.create({item_name, quantity});
+    res.status(200).json({ok: true, msg: "Object inventory correctly added"});
+  } catch(err) {
+    if (err instanceof ZodError) {
+      const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}))
+      res.status(400).json(msgErr);
+    } else {
+      res.status(500).json({ok: false, msg: err})
     };
-    try{    
-        if (2 === 1) { // Zod autentication
-            statusFunction.status = 400;
-            statusFunction.msgStatus.ok = false;
-            statusFunction.msgStatus.error = 'express-validator errors';
-            res.status(statusFunction.status).json(statusFunction.msgStatus);        
-        }
-    await Inventory.create(item_name, quantity);
-    } catch(err) {
-        statusFunction.status = 500;
-        statusFunction.msgStatus.ok = false;
-        statusFunction.msgStatus.msg = err;
-    res.status(statusFunction.status).json(statusFunction.msgStatus);
-    }
-    statusFunction.status = 200;
-    statusFunction.msgStatus.ok = true;
-    statusFunction.msgStatus.msg = 'Object inventory correctly added';
-  
-    res.status(statusFunction.status).json(statusFunction.msgStatus);
+  }
 }
-
 
 const deleteObjInventory = async(req, res) => {
   try {
