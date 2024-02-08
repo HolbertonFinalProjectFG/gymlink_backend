@@ -4,13 +4,15 @@ const { PORT } = require('./config.js')
 const { Gym , Client_trainer , Routine_template , Routine,User_role , User_routine , User , Role , Relation , Inventory} = require('./models/index.js')
 const { User: userRouter } = require('./routes/User.js')
 const { Inventory: inventoryRouter } = require('./routes/Inventory.js')
+const { Auth: authRouter } = require('./routes/Auth.js')
 
 const app = express()
 
 app.use(express.json());
 
-app.use("/api/user", userRouter)
-app.use("/api/inventory", inventoryRouter)
+app.use('/api/user', userRouter)
+app.use('/api/inventory', inventoryRouter)
+app.use('/api/login', authRouter)
 
 app.listen(PORT, async () => {
     await sequelize.sync()

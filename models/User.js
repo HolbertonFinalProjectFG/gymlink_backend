@@ -15,7 +15,7 @@
          type: DataTypes.STRING(50),
          required: true
      },
-     ci: {
+     CI: {
         type: DataTypes.STRING(50),
         required: true,
         unique: true
@@ -24,6 +24,10 @@
          type: DataTypes.STRING(30),
          required: true,
          unique: true
+     },
+     birth_date: {
+        type: DataTypes.DATE,
+        required: true
      },
      password: {
          type: DataTypes.STRING(30),
@@ -38,7 +42,7 @@
          type: DataTypes.STRING(50),
          required: true
      },
-     insurance_number: {
+     insurance: {
         type: DataTypes.STRING(50),
         required: true
      }

@@ -1,7 +1,6 @@
 const e = require('express');
 const sequelize = require('../database/database.js')
 const {User} = require('../models/User.js')
-const {Role} = require ('../models/Role.js')
 const { User_role } = require('../models/User_role.js')
 const { userUpdateSchema, userSchema } = require('../schemas/User.js')
 const { ZodError} = require('zod');
@@ -16,56 +15,38 @@ const getAllUsers = async(req, res) => {
 };
 
 const getUserById = async(req, res) => {
-  const { user_id } = req.params;
   try {
-    const users = await User.findAll({
-      where: {
-        user_id: user_id
-      }
-    });
-    const roles = await User_role.findAll({
-      where: {
-        user_id: user_id
-      }
-    });
-    
-    const roleNames = roles.map(role => role.role_id);
-
-    const usersWithRoles = users.map(user => ({
-      ...user.toJSON(), // Convert Sequelize instance to plain object
-      roles: roleNames
-    }));
-
-    res.status(200).json({ok: true, data: usersWithRoles   });
+    const { user_id } = req.params;
+    const users = await User.findByPk(user_id);
+    res.status(200).json({ok: true, data: [ users ]});
   } catch {
     res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };
 
 const getUsersByRole = async(req, res) => {
-  const { role_id } = req.params;
+  const roleId = req.params;
   try {
-    const users = await User.findAll({
+    const { users } = await User.findAll({
       include: {
-        model: User_role,
+        model: Role,
         where: {
-          role_id: role_id
+          id: roleId
         }
       }
     });
     res.status(200).json({ok: true, data: users});
 
-  } catch (error) {
-    res.status(500).json({ok: false, msg: "An error ocurred on server side", error: error.message});
+  } catch {
+    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 }
 
 const postNewUser = async(req, res) => {
   const { role_id } = req.body
   try{
-    userSchema.parse(req.body);
-
-    const newUser = await User.create(req.body);
+    const checkedData = userSchema.parse(req.body)
+    const newUser = await User.create(checkedData);
     const numOfRoles = role_id.length;
 
     for (let i = 0; i < numOfRoles; i++) {
@@ -73,11 +54,11 @@ const postNewUser = async(req, res) => {
     }
     res.status(200).json({ok: true, msg: 'User correctly added'});
   } catch(err) {
+    console.log(err)
     if (err instanceof ZodError) {
-      const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}))
-      res.status(400).json(msgErr);
+      res.status(400).json({ok: false, msg: 'express-validator errors'})
     } else {
-      res.status(500).json({ok: false, msg: "error"})
+      res.status(500).json({ok: false, msg: 'Something failed on server side'})
     };
   }
 }
@@ -118,7 +99,20 @@ const putUsersData = async (req, res) => {
       if(checkedData[key] && checkedData[key] === user.dataValues[key])
       {
         throw new ZodError(`Cannot update field with the same value\nActual ${key}: ${user.dataValues[key]}, new ${key}: ${checkedData[key]}`)
-      } 
+      }
+    }
+    const roles = checkedData.role_id
+    delete checkedData.role_id
+    console.log(roles)
+    if (roles !== undefined){
+      await User_role.destroy({
+        where: {
+          user_id: user.user_id
+        }
+      })
+      for (const id of roles) {
+        User_role.create({user_id: user.user_id, role_id: id});
+      }
     }
     await User.update(checkedData, {
       where: {
