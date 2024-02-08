@@ -7,7 +7,7 @@ User.get('/', getAllUsers);
 
 User.get('/:user_id', getUserById);
 
-User.get('/role_id', getUsersByRole);
+User.get('/role/:role_id', getUsersByRole);
 
 User.post('/', postNewUser);
 
