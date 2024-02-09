@@ -10,8 +10,9 @@ const getAllUsers = async(req, res) => {
   try{
     const users = await User.findAll();
     res.status(200).json({ok: true, data: users});
-  } catch {
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ok: false, msg: 'Something failed on server side'});
   }
 };
 
