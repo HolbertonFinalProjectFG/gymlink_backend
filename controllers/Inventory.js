@@ -19,7 +19,8 @@ const getObjById = async(req, res) => {
     const { item_id } = req.params;
     const item = await Inventory.findByPk(item_id);
     res.status(200).json({ok: true, data: [ item ]});
-  } catch {
+  } catch (err) {
+    console.log(err)
     res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };
@@ -31,6 +32,7 @@ const postObjInventory = async(req, res) => {
     await Inventory.create({item_name, quantity});
     res.status(200).json({ok: true, msg: "Object inventory correctly added"});
   } catch(err) {
+    console.log(err)
     if (err instanceof ZodError) {
       const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}))
       res.status(400).json(msgErr);
@@ -56,7 +58,8 @@ const deleteObjInventory = async(req, res) => {
       "msg": "item_id doesn't exists"
     });
   }
-} catch {
+} catch (err){
+  console.log(err)
   res.status(500).json({ok: false, msg: "An error ocurred on server side"});
 }
 };
