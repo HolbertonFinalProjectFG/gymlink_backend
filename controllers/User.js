@@ -9,7 +9,8 @@ const getAllUsers = async(req, res) => {
   try{
     const users = await User.findAll();
     res.status(200).json({ok: true, data: users});
-  } catch {
+  } catch (err){
+    console.log(err)
     res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };
@@ -19,7 +20,8 @@ const getUserById = async(req, res) => {
     const { user_id } = req.params;
     const users = await User.findByPk(user_id);
     res.status(200).json({ok: true, data: [ users ]});
-  } catch {
+  } catch (err){
+    console.log(err)
     res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };
@@ -37,7 +39,8 @@ const getUsersByRole = async(req, res) => {
     });
     res.status(200).json({ok: true, data: users});
 
-  } catch {
+  } catch (err){
+    console.log(err)
     res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 }
@@ -79,7 +82,8 @@ const deleteUser = async(req, res) => {
         'msg': "client_id doesn't exists"
       });
     }
-  } catch {
+  } catch (err){
+    console.log(err)
     res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };

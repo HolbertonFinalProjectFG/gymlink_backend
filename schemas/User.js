@@ -12,7 +12,8 @@ const userSchema = z.object({
   birth_date: z.coerce.date(),
   phone_number: z.string().min(10).regex(phoneRegex, 'Must contain the phone prefix eg. +598...'),
   emergency_number: z.string().min(10).regex(phoneRegex, 'Must contain the phone prefix eg. +598...'),
-  insurance: z.string().min(1)
+  insurance: z.string().min(1),
+  role_id: z.number().max(6).array().nonempty()
 });
 
 
