@@ -1,19 +1,19 @@
 const express = require('express');
 const User = express.Router();
 const { getAllUsers, postNewUser, deleteUser, putUsersData, getUserById, getUsersByRole } = require('../controllers/User');
+const { JwtMiddleware } = require('../controllers/Auth')
 
+User.get('/', JwtMiddleware, getAllUsers);
 
-User.get('/', getAllUsers);
+User.get('/:user_id', JwtMiddleware, getUserById);
 
-User.get('/:user_id', getUserById);
+User.get('/role/:role_id', JwtMiddleware, getUsersByRole);
 
-User.get('/role/:role_id', getUsersByRole);
+User.post('/', JwtMiddleware, postNewUser);
 
-User.post('/', postNewUser);
+User.patch('/:user_id', JwtMiddleware, putUsersData);
 
-User.patch('/:user_id', putUsersData);
-
-User.delete('/:user_id', deleteUser);
+User.delete('/:user_id', JwtMiddleware, deleteUser);
 
 module.exports = {
     User

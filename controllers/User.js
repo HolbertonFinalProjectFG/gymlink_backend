@@ -7,6 +7,9 @@ const { userUpdateSchema, userSchema } = require('../schemas/User.js');
 const { ZodError} = require('zod');
 
 const getAllUsers = async(req, res) => {
+  if (req.user.user_role[0] !== 2) {
+    res.status(401).json({ok: false, msg: 'error jwt'});
+  };
   try{
     const users = await User.findAll();
     res.status(200).json({ok: true, data: users});
@@ -17,6 +20,9 @@ const getAllUsers = async(req, res) => {
 };
 
 const getUserById = async(req, res) => {
+  if (req.user.user_role[0] !== 2) {
+    res.status(401).json({ok: false, msg: 'error jwt'});
+  };
   try {
     const { user_id } = req.params;
     const users = await User.findByPk(user_id);
@@ -28,6 +34,9 @@ const getUserById = async(req, res) => {
 };
 
 const getUsersByRole = async(req, res) => {
+  if (req.user.user_role[0] !== 2) {
+    res.status(401).json({ok: false, msg: 'error jwt'});
+  };
   const roleId = req.params;
   try {
     const { users } = await User.findAll({
@@ -47,6 +56,9 @@ const getUsersByRole = async(req, res) => {
 }
 
 const postNewUser = async(req, res) => {
+  if (req.user.user_role[0] !== 2 || req.user.user_role[0] !== 1) {
+    res.status(401).json({ok: false, msg: 'error jwt'});
+  };
   const { role_id, trainer_id } = req.body;
   try{
     const checkedData = userSchema.parse(req.body)
@@ -70,6 +82,9 @@ const postNewUser = async(req, res) => {
 }
     
 const deleteUser = async(req, res) => {
+  if (req.user.user_role[0] !== 2) {
+    res.status(401).json({ok: false, msg: 'error jwt'});
+  };
   try {
     const { user_id } = req.params;
     const users = await User.findByPk(user_id);  
@@ -92,6 +107,9 @@ const deleteUser = async(req, res) => {
 };
 
 const putUsersData = async (req, res) => {
+  if (req.user.user_role[0] !== 2) {
+    res.status(401).json({ok: false, msg: 'error jwt'});
+  };
   try {
     const { user_id } = req.params                                           
     const checkedData = userUpdateSchema.partial().parse(req.body)

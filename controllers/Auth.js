@@ -64,7 +64,7 @@ const handleLogin = async (req, res, next) => {
 }
 
 function JwtMiddleware(req, res, next) {
-  const token = req.headers['jwt'];
+  const token = req.cookies.jwt;
   if (!token) {res.status(401).json({ok: false, msg: "JWT token not provided"})};
   
   jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
@@ -72,6 +72,7 @@ function JwtMiddleware(req, res, next) {
       res.status(401).json({ok: false, msg: "JWT token expired"})
     } else {
       req.user = decoded;
+      console.log(decoded)
       next();
     }
   })

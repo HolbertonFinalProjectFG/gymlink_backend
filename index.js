@@ -6,10 +6,12 @@ const { User: userRouter } = require('./routes/User.js')
 const { Inventory: inventoryRouter } = require('./routes/Inventory.js')
 const { Auth: authRouter } = require('./routes/Auth.js')
 const cors = require('cors')
+const cookieParser = require('cookie-parser');
 
 const app = express()
 
 app.use(express.json());
+app.use(cookieParser());
 
 const corsOptions = {
 origin: FRONTED_HOST, // replace with your frontend's URL
