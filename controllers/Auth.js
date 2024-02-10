@@ -5,6 +5,7 @@ const { User_role } = require('../models/User_role')
 const { JWT_SECRET_KEY } = require('../config')
 
 const handleLogin = async (req, res, next) => {
+    console.log(`====>>>>${req.user}<<<<====`)
     try {    
       const user = await User.findAll({
           attributes: ['user_id', 'password'],
@@ -62,6 +63,21 @@ const handleLogin = async (req, res, next) => {
     }   
 }
 
+function JwtMiddleware(req, res, next) {
+  const token = req.headers['jwt'];
+  if (!token) {res.status(401).json({ok: false, msg: "JWT token not provided"})};
+  
+  jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+    if (err) {
+      res.status(401).json({ok: false, msg: "JWT token expired"})
+    } else {
+      req.user = decoded;
+      next();
+    }
+  })
+}
+
 module.exports = {
-    handleLogin
+    handleLogin,
+    JwtMiddleware
 }
