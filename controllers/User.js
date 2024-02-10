@@ -1,8 +1,9 @@
 const e = require('express');
-const sequelize = require('../database/database.js')
-const {User} = require('../models/User.js')
-const { User_role } = require('../models/User_role.js')
-const { userUpdateSchema, userSchema } = require('../schemas/User.js')
+const sequelize = require('../database/database.js');
+const {User} = require('../models/User.js');
+const { User_role } = require('../models/User_role.js');
+const { Client_trainer } = require('../models/Client_trainer.js');
+const { userUpdateSchema, userSchema } = require('../schemas/User.js');
 const { ZodError} = require('zod');
 
 const getAllUsers = async(req, res) => {
@@ -46,15 +47,17 @@ const getUsersByRole = async(req, res) => {
 }
 
 const postNewUser = async(req, res) => {
-  const { role_id } = req.body
+  const { role_id, trainer_id } = req.body;
   try{
     const checkedData = userSchema.parse(req.body)
     const newUser = await User.create(checkedData);
     const numOfRoles = role_id.length;
-
     for (let i = 0; i < numOfRoles; i++) {
       User_role.create({user_id: newUser.user_id, role_id: role_id[i]});
     }
+    if (trainer_id) {
+      await Client_trainer.create({client_user_id: newUser.user_id, trainer_user_id: trainer_id})
+    };
     res.status(200).json({ok: true, msg: 'User correctly added'});
   } catch(err) {
     console.log(err)
