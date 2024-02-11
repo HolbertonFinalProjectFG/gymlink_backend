@@ -34,7 +34,7 @@ const getUserById = async(req, res) => {
     res.status(200).json({ok: true, data: [ users ]});
   } catch (err){
     console.log(err)
-    if (err.message == 'JWT error') {
+    if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
@@ -60,7 +60,7 @@ const getUsersByRole = async(req, res) => {
     res.status(200).json({ok: true, data: users});
   } catch (err){
     console.log(err)
-    if (err.message == 'JWT error') {
+    if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
@@ -71,9 +71,9 @@ const getUsersByRole = async(req, res) => {
 
 const postNewUser = async(req, res) => {
   try{
-    //if (req.user.user_role[0] !== 2) {
-    //  throw new Error('JWT error')
-    //};
+    if (req.user.user_role[0] !== 2) {
+     throw new Error('JWT error')
+    };
     const { role_id, trainer_id } = req.body;
     const checkedData = userSchema.parse(req.body)
     const newUser = await User.create(checkedData);
@@ -90,7 +90,7 @@ const postNewUser = async(req, res) => {
     if (err instanceof ZodError) {
       res.status(400).json({ok: false, msg: 'express-validator errors'})
     }
-    else if (err.message == 'JWT error') {
+    else if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
@@ -120,7 +120,7 @@ const deleteUser = async(req, res) => {
     }
   } catch (err){
     console.log(err)
-    if (err.message == 'JWT error') {
+    if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
@@ -181,7 +181,7 @@ const putUsersData = async (req, res) => {
         error: "express-validator errors"
       })
     }
-    else if (err.message == 'JWT error') {
+    else if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {

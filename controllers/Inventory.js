@@ -1,7 +1,7 @@
 const e = require('express');
 const sequelize = require('../database/database.js')
 const { Inventory } = require('../models/Inventory.js');
-const { itemUpdateSchema } = require('../schemas/Inventory.js');
+const { itemUpdateSchema, inventorySchema } = require('../schemas/Inventory.js');
 const { ZodError } = require('zod');
 
 const getObjInventory = async(req, res) => {
@@ -13,7 +13,7 @@ const getObjInventory = async(req, res) => {
       res.status(200).json({ok: true, data: items});
     } catch (err){
       console.log(err)
-      if (err.message == 'JWR error') {
+      if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
       }
       else {
@@ -32,7 +32,7 @@ const getObjById = async(req, res) => {
     res.status(200).json({ok: true, data: [ item ]});
   } catch (err) {
     console.log(err)
-    if (err.message == 'JWR error') {
+    if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
@@ -56,7 +56,7 @@ const postObjInventory = async(req, res) => {
       const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}))
       res.status(400).json(msgErr);
     } 
-    else if (err.message == 'JWR error') {
+    else if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
@@ -74,24 +74,24 @@ const deleteObjInventory = async(req, res) => {
     const item = await Inventory.findByPk(item_id);  
     if (item !== null) {
       await item.destroy();
-    res.status(200).json({
-      "ok": true,
-      "msg": `Item with id ${item_id} deleted succesfully`
-    });
-  } 
-  else if (err.message == 'JWR error') {
-    res.status(400).json({ok: false, msg: 'JWT error'});
+      res.status(200).json({
+        "ok": true,
+        "msg": `Item with id ${item_id} deleted succesfully`
+      });
+    } else {
+      res.status(404).json({
+        "ok": false,
+        "msg": "item_id doesn't exists"
+      });
+    }
+  } catch (err){
+    if (err.message === 'JWT error') {
+      res.status(400).json({ok: false, msg: 'JWT error'});
+    } else {
+      console.log(err)
+      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    }
   }
-  else {
-    res.status(404).json({
-      "ok": false,
-      "msg": "item_id doesn't exists"
-    });
-  }
-} catch (err){
-  console.log(err)
-  res.status(500).json({ok: false, msg: "An error ocurred on server side"});
-}
 };
 
 const putInventoryData = async (req, res) => {
@@ -133,7 +133,7 @@ const putInventoryData = async (req, res) => {
         error: 'express-validator errors'
       })
     }
-    else if (err.message == 'JWR error') {
+    else if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
