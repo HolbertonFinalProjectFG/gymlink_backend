@@ -19,19 +19,36 @@ const getAllUsers = async(req, res) => {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
-      res.status(500).json({ok: false, msg: 'Something failed on server side'});
+      res.status(500).json({ok: false, msg: 'Something failed on server side', error: err.message});
     }
   }
 };
 
 const getUserById = async(req, res) => {
+  const { user_id } = req.params;
   try {
     if (req.user.user_role[0] !== 2) {
       throw new Error('JWT error')
     };
-    const { user_id } = req.params;
-    const users = await User.findByPk(user_id);
-    res.status(200).json({ok: true, data: [ users ]});
+    const users = await User.findAll({
+      where: {
+        user_id: user_id
+      }
+    });
+    const roles = await User_role.findAll({
+      where: {
+        user_id: user_id
+      }
+    });
+
+    const roleNames = roles.map(role => role.role_id);
+
+    const usersWithRoles = users.map(user => ({
+      ...user.toJSON(), // Convert Sequelize instance to plain object
+      roles: roleNames
+    }));
+
+    res.status(200).json({ok: true, data: usersWithRoles   });
   } catch (err){
     console.log(err)
     if (err.message === 'JWT error') {
@@ -49,12 +66,10 @@ const getUsersByRole = async(req, res) => {
       throw new Error('JWT error')
     };
     const { role_id } = req.params;
-    const { users } = await User.findAll({
+    const users = await User.findAll({
       include: {
-        model: Role,
-        where: {
-          id: role_id
-        }
+        model: User_role,
+        where: { role_id: role_id }
       }
     });
     res.status(200).json({ok: true, data: users});
@@ -64,7 +79,7 @@ const getUsersByRole = async(req, res) => {
       res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
-      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+      res.status(500).json({ok: false, msg: "An error ocurred on server side", error: err.message});
     }
   }
 }
