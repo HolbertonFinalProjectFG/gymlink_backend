@@ -33,7 +33,7 @@ const handleLogin = async (req, res, next) => {
       expiresIn: 1000 * 15
     })
     res.cookie("jwt", token)
-    res.status(400).json({
+    res.status(200).json({
       ok: true,
       msg: "User succesfully logged"
     })
