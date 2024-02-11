@@ -36,7 +36,7 @@ const handleLogin = async (req, res, next) => {
       maxAge: 86400,
       httpOnly: false,
       sameSite: 'none',
-      secure: true
+      secure: false
     })
     res.status(200).json({
       ok: true,
