@@ -7,60 +7,74 @@ const { userUpdateSchema, userSchema } = require('../schemas/User.js');
 const { ZodError} = require('zod');
 
 const getAllUsers = async(req, res) => {
-  if (req.user.user_role[0] !== 2) {
-    res.status(401).json({ok: false, msg: 'error jwt'});
-  };
   try{
+    if (req.user.user_role[0] !== 2) {
+      throw new Error('JWT error')
+    };
     const users = await User.findAll();
     res.status(200).json({ok: true, data: users});
   } catch (err) {
     console.log(err)
-    res.status(500).json({ok: false, msg: 'Something failed on server side'});
+    if (err.message == 'JWT error') {
+      res.status(400).json({ok: false, msg: 'JWT error'});
+    }
+    else {
+      res.status(500).json({ok: false, msg: 'Something failed on server side'});
+    }
   }
 };
 
 const getUserById = async(req, res) => {
-  if (req.user.user_role[0] !== 2) {
-    res.status(401).json({ok: false, msg: 'error jwt'});
-  };
   try {
+    if (req.user.user_role[0] !== 2) {
+      throw new Error('JWT error')
+    };
     const { user_id } = req.params;
     const users = await User.findByPk(user_id);
     res.status(200).json({ok: true, data: [ users ]});
   } catch (err){
     console.log(err)
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    if (err.message == 'JWT error') {
+      res.status(400).json({ok: false, msg: 'JWT error'});
+    }
+    else {
+      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    }
   }
 };
 
 const getUsersByRole = async(req, res) => {
-  if (req.user.user_role[0] !== 2) {
-    res.status(401).json({ok: false, msg: 'error jwt'});
-  };
-  const roleId = req.params;
   try {
+    if (req.user.user_role[0] !== 2) {
+      throw new Error('JWT error')
+    };
+    const { role_id } = req.params;
     const { users } = await User.findAll({
       include: {
         model: Role,
         where: {
-          id: roleId
+          id: role_id
         }
       }
     });
     res.status(200).json({ok: true, data: users});
-
   } catch (err){
     console.log(err)
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    if (err.message == 'JWT error') {
+      res.status(400).json({ok: false, msg: 'JWT error'});
+    }
+    else {
+      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    }
   }
 }
 
 const postNewUser = async(req, res) => {
-  if (req.user.user_role[0] !== 2 || req.user.user_role[0] !== 1) {
-    res.status(401).json({ok: false, msg: 'error jwt'});
-  };
-  const { role_id, trainer_id } = req.body;
   try{
+    //if (req.user.user_role[0] !== 2) {
+    //  throw new Error('JWT error')
+    //};
+    const { role_id, trainer_id } = req.body;
     const checkedData = userSchema.parse(req.body)
     const newUser = await User.create(checkedData);
     const numOfRoles = role_id.length;
@@ -75,17 +89,21 @@ const postNewUser = async(req, res) => {
     console.log(err)
     if (err instanceof ZodError) {
       res.status(400).json({ok: false, msg: 'express-validator errors'})
-    } else {
+    }
+    else if (err.message == 'JWT error') {
+      res.status(400).json({ok: false, msg: 'JWT error'});
+    }
+    else {
       res.status(500).json({ok: false, msg: 'Something failed on server side'})
     };
   }
 }
     
 const deleteUser = async(req, res) => {
-  if (req.user.user_role[0] !== 2) {
-    res.status(401).json({ok: false, msg: 'error jwt'});
-  };
   try {
+    if (req.user.user_role[0] !== 2) {
+      throw new Error('JWT error')
+    };
     const { user_id } = req.params;
     const users = await User.findByPk(user_id);  
     if (users !== null) {
@@ -102,15 +120,20 @@ const deleteUser = async(req, res) => {
     }
   } catch (err){
     console.log(err)
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    if (err.message == 'JWT error') {
+      res.status(400).json({ok: false, msg: 'JWT error'});
+    }
+    else {
+      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    }
   }
 };
 
 const putUsersData = async (req, res) => {
-  if (req.user.user_role[0] !== 2) {
-    res.status(401).json({ok: false, msg: 'error jwt'});
-  };
   try {
+    if (req.user.user_role[0] !== 2) {
+      throw new Error('JWT error')
+    };
     const { user_id } = req.params                                           
     const checkedData = userUpdateSchema.partial().parse(req.body)
     if (Object.keys(checkedData).length == 0){
@@ -157,6 +180,9 @@ const putUsersData = async (req, res) => {
         ok: false,
         error: "express-validator errors"
       })
+    }
+    else if (err.message == 'JWT error') {
+      res.status(400).json({ok: false, msg: 'JWT error'});
     }
     else {
       res.status(500).json({
