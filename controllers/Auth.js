@@ -32,7 +32,12 @@ const handleLogin = async (req, res, next) => {
     }, JWT_SECRET_KEY, {
       expiresIn: 1000 * 15
     })
-    res.cookie("jwt", token)
+    res.cookie("jwt", token, {
+      maxAge: 86400,
+      httpOnly: false,
+      sameSite: 'none',
+      secure: true
+    })
     res.status(200).json({
       ok: true,
       msg: "User succesfully logged"
