@@ -27,10 +27,10 @@ const handleLogin = async (req, res, next) => {
     for (const role of roles){
       roles_array.push(role.dataValues.role_id)
     }
-    const token =jwt.sign({
+    const token = jwt.sign({
       user_role: roles_array,
     }, JWT_SECRET_KEY, {
-      expiresIn: 1000 * 15
+      expiresIn: 86400 / 24
     })
     res.cookie("jwt", token, {
       maxAge: 86400,
@@ -40,7 +40,9 @@ const handleLogin = async (req, res, next) => {
     })
     res.status(200).json({
       ok: true,
-      msg: "User succesfully logged"
+      msg: "User succesfully logged",
+      // role_id: user[0].dataValues.user_id,
+      // role_name: 2
     })
   }
   catch (err) {
