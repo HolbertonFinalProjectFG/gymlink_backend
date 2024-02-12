@@ -90,8 +90,17 @@ const postNewUser = async(req, res) => {
      throw new Error('JWT error')
     };
     const { role_id, trainer_id } = req.body;
+
     const checkedData = userSchema.parse(req.body)
-    const newUser = await User.create(checkedData);
+
+    // La contraseña por ahora va a ser CI
+    const newUser = await User.create(
+      {
+        ...checkedData,
+        password: req.body.CI
+
+      }
+    );
     const numOfRoles = role_id.length;
     for (let i = 0; i < numOfRoles; i++) {
       User_role.create({user_id: newUser.user_id, role_id: role_id[i]});
@@ -103,7 +112,8 @@ const postNewUser = async(req, res) => {
   } catch(err) {
     console.log(err)
     if (err instanceof ZodError) {
-      res.status(400).json({ok: false, msg: 'express-validator errors'})
+      const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}))
+      res.status(400).json(msgErr[0])
     }
     else if (err.message === 'JWT error') {
       res.status(400).json({ok: false, msg: 'JWT error'});

@@ -1,17 +1,19 @@
 const express = require('express');
 const Inventory = express.Router();
-const { JwtMiddleware } = require('../controllers/Auth')
+const { JwtMiddleware } = require('../middlewares/JwtMiddleware.js')
 const { postObjInventory, getObjInventory, putInventoryData, getObjById, deleteObjInventory } = require('../controllers/Inventory.js');
 
-Inventory.get('/', JwtMiddleware, getObjInventory);
+Inventory.use(JwtMiddleware);
 
-Inventory.get('/:item_id', JwtMiddleware, getObjById);
+Inventory.get('/', getObjInventory);
 
-Inventory.post('/', JwtMiddleware, postObjInventory);
+Inventory.get('/:item_id', getObjById);
 
-Inventory.patch('/:item_id', JwtMiddleware, putInventoryData);
+Inventory.post('/', postObjInventory);
 
-Inventory.delete('/:item_id', JwtMiddleware, deleteObjInventory);
+Inventory.patch('/:item_id', putInventoryData);
+
+Inventory.delete('/:item_id', deleteObjInventory);
 
 module.exports = {
     Inventory,
