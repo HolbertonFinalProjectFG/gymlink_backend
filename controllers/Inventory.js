@@ -6,46 +6,27 @@ const { ZodError } = require('zod');
 
 const getObjInventory = async(req, res) => {
     try{
-      if (req.user.user_role[0] !== 2) {
-        throw new Error('JWT error')
-      };
       const items = await Inventory.findAll();
       res.status(200).json({ok: true, data: items});
     } catch (err){
       console.log(err)
-      if (err.message === 'JWT error') {
-      res.status(400).json({ok: false, msg: 'JWT error'});
-      }
-      else {
         res.status(500).json({ok: false, msg: "An error ocurred on server side"});
-      }
     }
-  };
+};
 
 const getObjById = async(req, res) => {
   try {
-    if (req.user.user_role[0] !== 2) {
-      throw new Error('JWT error')
-    };
     const { item_id } = req.params;
     const item = await Inventory.findByPk(item_id);
     res.status(200).json({ok: true, data: [ item ]});
   } catch (err) {
     console.log(err)
-    if (err.message === 'JWT error') {
-      res.status(400).json({ok: false, msg: 'JWT error'});
-    }
-    else {
       res.status(500).json({ok: false, msg: "An error ocurred on server side"});
-    }
   }
 };
 
 const postObjInventory = async(req, res) => {
   try{
-    if (req.user.user_role[0] !== 2) {
-      throw new Error('JWT error')
-    };
     const { item_name, quantity } = req.body;
     inventorySchema.parse({item_name, quantity});
     await Inventory.create({item_name, quantity});
@@ -55,11 +36,7 @@ const postObjInventory = async(req, res) => {
     if (err instanceof ZodError) {
       const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}))
       res.status(400).json(msgErr);
-    } 
-    else if (err.message === 'JWT error') {
-      res.status(400).json({ok: false, msg: 'JWT error'});
-    }
-    else {
+    } else {
       res.status(500).json({ok: false, msg: err})
     };
   }
@@ -67,9 +44,6 @@ const postObjInventory = async(req, res) => {
 
 const deleteObjInventory = async(req, res) => {
   try {
-    if (req.user.user_role[0] !== 2) {
-      throw new Error('JWT error')
-    };
     const { item_id } = req.params;
     const item = await Inventory.findByPk(item_id);  
     if (item !== null) {
@@ -85,20 +59,13 @@ const deleteObjInventory = async(req, res) => {
       });
     }
   } catch (err){
-    if (err.message === 'JWT error') {
-      res.status(400).json({ok: false, msg: 'JWT error'});
-    } else {
-      console.log(err)
-      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
-    }
+    console.log(err)
+    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };
 
 const putInventoryData = async (req, res) => {
   try {
-    if (req.user.user_role[0] !== 2) {
-      throw new Error('JWT error')
-    };
     const { item_id } = req.params
     const checkedData = itemUpdateSchema.partial().parse(req.body)
     if (Object.keys(checkedData).length == 0){
@@ -124,19 +91,14 @@ const putInventoryData = async (req, res) => {
       ok: true,
       msg: 'Item correctly updated'
     })  
-  } 
-  catch(err) {
+  } catch(err) {
     console.log(err)
     if (err instanceof(ZodError)) {
       res.status(400).json({
         ok: false,
         error: 'express-validator errors'
       })
-    }
-    else if (err.message === 'JWT error') {
-      res.status(400).json({ok: false, msg: 'JWT error'});
-    }
-    else {
+    } else {
       res.status(500).json({
         ok: false,
         error: 'Something failed on server side'
