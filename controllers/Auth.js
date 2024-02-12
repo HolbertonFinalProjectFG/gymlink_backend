@@ -67,6 +67,5 @@ const handleLogin = async (req, res, next) => {
 }
 
 module.exports = {
-    handleLogin,
-    JwtMiddleware
+    handleLogin
 }
