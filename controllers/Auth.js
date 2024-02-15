@@ -30,10 +30,10 @@ const handleLogin = async (req, res, next) => {
     const token = jwt.sign({
       user_role: roles_array,
     }, JWT_SECRET_KEY, {
-      expiresIn: 86400
+      expiresIn: 1000 * 60 * 60 * 8
     })
     res.cookie("jwt", token, {
-      maxAge: 86400,
+      maxAge: 1000 * 60 * 60 * 8,
       httpOnly: false,
       sameSite: 'none',
       secure: true

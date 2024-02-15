@@ -81,10 +81,17 @@ const postNewUser = async(req, res) => {
   } catch(err) {
     console.log(err);
     if (err instanceof ZodError) {
-      const msgErr = err.issues.map((issue) => ({ok: false, msg: issue.message}));
-      res.status(400).json(msgErr[0]);
+      res.status(400).json({
+        ok: "false",
+        msg: 'express-validator errors'
+      });
+    } else {
+      res.status(500).json({
+        ok: false, 
+        msg: 'Something failed on server side',
+        err: err.msg
+      });
     }
-      res.status(500).json({ok: false, msg: 'Something failed on server side'});
   }
 }
 
@@ -139,6 +146,22 @@ const putUsersData = async (req, res) => {
       for (const id of roles) {
         User_role.create({user_id: user.user_id, role_id: id});
       }
+    }
+    const trainer_id = checkedData.trainer_id
+    if (trainer_id !== undefined) {
+      const relation = await Client_trainer.findAll({
+        where: {
+          client_user_id: user.user_id
+        }
+      })
+      if (relation !== null) {
+        await Client_trainer.destroy({
+          where: {
+            client_user_id: user.user_id
+          }
+        })
+      }
+      await Client_trainer.create({client_user_id: user_id, trainer_user_id: trainer_id})
     }
     await User.update(checkedData, {
       where: {

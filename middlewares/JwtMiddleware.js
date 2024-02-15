@@ -24,7 +24,7 @@ function JwtMiddleware(req, res, next) {
   } catch (err) {
     console.log(err);
     if (err.message === 'JWT token not provided')
-      res.status(400).json({ok: false, msg: "JWT token not provided"});
+      res.status(401).json({ok: false, msg: "JWT token not provided"});
     else
       res.status(500).json({ok: false, msg: err.message});
   }
