@@ -10,6 +10,7 @@ const Inventory = sequelize.define('inventory', {
 
     item_name: {
         type: DataTypes.STRING(100),
+        unique: true,
     },
 
     quantity: {

@@ -1,116 +1,121 @@
 const e = require('express');
-const sequelize = require('../database/database.js')
-const {User} = require('../models/User.js')
-const { userUpdateSchema } = require('../schemas/User.js')
+const sequelize = require('../database/database.js');
+const {User} = require('../models/User.js');
+const { User_role } = require('../models/User_role.js');
+const { Client_trainer } = require('../models/Client_trainer.js');
+const { userUpdateSchema, userSchema } = require('../schemas/User.js');
 const { ZodError} = require('zod');
 
 const getAllUsers = async(req, res) => {
   try{
     const users = await User.findAll();
     res.status(200).json({ok: true, data: users});
-  } catch {
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ok: false, msg: 'Something failed on server side', error: err.message});
   }
-};
+}
 
 const getUserById = async(req, res) => {
+  const { user_id } = req.params;
   try {
-    const { user_id } = req.params;
-    const users = await User.findByPk(user_id);
-    res.status(200).json({ok: true, data: [ users ]});
-  } catch {
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+    const users = await User.findAll({
+      where: {
+        user_id: user_id
+      }
+    });
+    const roles = await User_role.findAll({
+      where: {
+        user_id: user_id
+      }
+    });
+
+    const roleNames = roles.map(role => role.role_id);
+
+    const usersWithRoles = users.map(user => ({
+      ...user.toJSON(), // Convert Sequelize instance to plain object
+      roles: roleNames
+    }));
+
+    res.status(200).json({ok: true, data: usersWithRoles   });
+  } catch (err){
+    console.log(err)
+      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
   }
 };
 
 const getUsersByRole = async(req, res) => {
-  const roleId = req.params;
   try {
+    const { role_id } = req.params;
     const users = await User.findAll({
       include: {
-        model: Role,
-        where: {
-          id: roleId
-        }
+        model: User_role,
+        where: { role_id: role_id }
       }
     });
     res.status(200).json({ok: true, data: users});
-
-  } catch {
-    res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  } catch (err){
+    console.log(err)
+      res.status(500).json({ok: false, msg: "An error ocurred on server side", error: err.message});
   }
 }
 
-
 const postNewUser = async(req, res) => {
-  const {
-    name,
-    surname,
-    ci,
-    email,
-    password,
-    phone_number,
-    emergency_number,
-    insurance_number,
-    role
-  } = req.body;
-  let statusFunction = {
-    status: 0,
-    msgStatus: {}
+  try{
+    const { role_id, trainer_id } = req.body;
+    const checkedData = userSchema.parse(req.body);
+    // The password for now will be CI
+    const newUser = await User.create(
+      {
+        ...checkedData,
+        password: req.body.CI
+      }
+    );
+    const numOfRoles = role_id.length;
+    for (let i = 0; i < numOfRoles; i++) {
+      User_role.create({user_id: newUser.user_id, role_id: role_id[i]});
+    }
+    if (trainer_id)
+      await Client_trainer.create({client_user_id: newUser.user_id, trainer_user_id: trainer_id});
+    res.status(200).json({ok: true, msg: 'User correctly added'});
+  } catch(err) {
+    console.log(err);
+    if (err instanceof ZodError) {
+      res.status(400).json({
+        ok: "false",
+        msg: 'express-validator errors'
+      });
+    } else {
+      res.status(500).json({
+        ok: false, 
+        msg: 'Something failed on server side',
+        err: err.msg
+      });
+    }
   }
-  try{    
-    if (2 === 1) { // Zod autentication
-      statusFunction.status = 400;
-      statusFunction.msgStatus.ok = false;
-      statusFunction.msgStatus.error = 'express-validator errors';
-      // const json = JSON.parse(statusFunction);
-      res.status(statusFunction.status).json(statusFunction.msgStatus);
-    }
-      await User.create({
-          name,
-          surname,
-          ci,
-          email,
-          password,
-          phone_number,
-          emergency_number,
-          insurance_number,
-        });
-      } catch(err) {
-        statusFunction.status = 500;
-        statusFunction.msgStatus.ok = false;
-        statusFunction.msgStatus.msg = err;
-        // const json = JSON.parse(statusFunction);
-        res.status(statusFunction.status).json(statusFunction.msgStatus);
-      }
-      statusFunction.status = 200;
-      statusFunction.msgStatus.ok = true;
-      statusFunction.msgStatus.msg = 'User correctly added';
+}
 
-      // const json = JSON.parse(statusFunction);
-      res.status(statusFunction.status).json(statusFunction.msgStatus);
+const deleteUser = async(req, res) => {
+  try {
+    const { user_id } = req.params;
+    const users = await User.findByPk(user_id);  
+    if (users !== null) {
+      await users.destroy();
+    res.status(200).json({
+      'ok': true,
+      'msg': `User with id ${user_id} deleted succesfully`
+    });
+    } else {
+      res.status(404).json({
+        'ok': false,
+        'msg': "client_id doesn't exists"
+      });
     }
-    
-    const deleteUser = async(req, res) => {
-      try {
-        const { user_id } = req.params;
-        const users = await User.findByPk(user_id);  
-        if (users !== null) {
-          await users.destroy();
-        res.status(200).json({
-          'ok': true,
-          'msg': 'User with id ${user_id} deleted succesfully'
-        });
-        } else {
-          res.status(404).json({
-            'ok': true,
-            'msg': "client_id doesn't exists"
-          });
-        }
-      } catch {
-        res.status(500).json({ok: false, msg: "An error ocurred on server side"});
-      }
-    };
+  } catch (err){
+    console.log(err)
+      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+  }
+};
 
 const putUsersData = async (req, res) => {
   try {
@@ -126,8 +131,37 @@ const putUsersData = async (req, res) => {
     for (key in user.dataValues){
       if(checkedData[key] && checkedData[key] === user.dataValues[key])
       {
-        throw new ZodError('Cannot update field with the same value')
-      } 
+        throw new ZodError(`Cannot update field with the same value\nActual ${key}: ${user.dataValues[key]}, new ${key}: ${checkedData[key]}`)
+      }
+    }
+    const roles = checkedData.role_id
+    delete checkedData.role_id
+    console.log(roles)
+    if (roles !== undefined){
+      await User_role.destroy({
+        where: {
+          user_id: user.user_id
+        }
+      })
+      for (const id of roles) {
+        User_role.create({user_id: user.user_id, role_id: id});
+      }
+    }
+    const trainer_id = checkedData.trainer_id
+    if (trainer_id !== undefined) {
+      const relation = await Client_trainer.findAll({
+        where: {
+          client_user_id: user.user_id
+        }
+      })
+      if (relation !== null) {
+        await Client_trainer.destroy({
+          where: {
+            client_user_id: user.user_id
+          }
+        })
+      }
+      await Client_trainer.create({client_user_id: user_id, trainer_user_id: trainer_id})
     }
     await User.update(checkedData, {
       where: {
@@ -147,8 +181,7 @@ const putUsersData = async (req, res) => {
         ok: false,
         error: "express-validator errors"
       })
-    }
-    else {
+    } else {
       res.status(500).json({
       ok: false,
       error: 'Something failed on server side'
