@@ -14,9 +14,9 @@ User.get('/role/:role_id', PermissionsMiddleware([1, 2]), getUsersByRole);
 
 User.post('/', postNewUser);
 
-User.patch('/:user_id', PermissionsMiddleware([1]), putUsersData);
+User.patch('/:user_id', PermissionsMiddleware([1, 2]), putUsersData);
 
-User.delete('/:user_id', PermissionsMiddleware([1]), deleteUser);
+User.delete('/:user_id', PermissionsMiddleware([1, 2]), deleteUser);
 
 module.exports = {
     User
