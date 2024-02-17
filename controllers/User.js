@@ -5,6 +5,7 @@ const { User_role } = require('../models/User_role.js');
 const { Client_trainer } = require('../models/Client_trainer.js');
 const { userUpdateSchema, userSchema } = require('../schemas/User.js');
 const { ZodError} = require('zod');
+const { Op } = require('sequelize')
 
 const getAllUsers = async(req, res) => {
   try{
@@ -119,51 +120,97 @@ const deleteUser = async(req, res) => {
 
 const putUsersData = async (req, res) => {
   try {
-    const { user_id } = req.params                                           
-    const checkedData = userUpdateSchema.partial().parse(req.body)
-    if (Object.keys(checkedData).length == 0){
+    const { user_id } = req.params
+    let updatedValues = 0                                           
+    const checkedData = userUpdateSchema.partial().safeParse(req.body)
+    console.log(checkedData)
+    if (checkedData.success === false) {
+      throw new ZodError(checkedData.error)
+    }
+    if (Object.keys(checkedData.data).length == 0){
       throw new ZodError('Nothing to update / Cannot update that value')
     }
     const user = await User.findByPk(user_id)
     if (user === null) {
       throw new Error('User does not exist')
     }
+    const roles = checkedData.data.role_id
+    console.log(roles)
+    delete checkedData.data.role_id
+    const trainer_id = checkedData.data.trainer_id
+    delete checkedData.data.trainer_id
     for (key in user.dataValues){
-      if(checkedData[key] && checkedData[key] === user.dataValues[key])
+      if(checkedData.data[key] && checkedData.data[key] !== user.dataValues[key])
       {
-        throw new ZodError(`Cannot update field with the same value\nActual ${key}: ${user.dataValues[key]}, new ${key}: ${checkedData[key]}`)
+        updatedValues += 1;
       }
     }
-    const roles = checkedData.role_id
-    delete checkedData.role_id
-    console.log(roles)
     if (roles !== undefined){
-      await User_role.destroy({
+      const actualRole = await User_role.findAll({
         where: {
-          user_id: user.user_id
+          user_id,
+          role_id: roles[0]
         }
       })
-      for (const id of roles) {
-        User_role.create({user_id: user.user_id, role_id: id});
+      if (actualRole.length === 0) {
+        await User_role.destroy({
+          where: {
+            user_id: user.user_id
+          }
+        })
+        for (const id of roles) {
+          User_role.create({user_id: user.user_id, role_id: id});
+        }
+        updatedValues += 1
       }
     }
-    const trainer_id = checkedData.trainer_id
     if (trainer_id !== undefined) {
+      const trainer = await User_role.findAll({
+        where: {
+          user_id: trainer_id,
+          role_id: 3
+        }
+      })
+      if (trainer.length === 0) {
+        throw new Error('Trainer does not exist')
+      }
       const relation = await Client_trainer.findAll({
         where: {
           client_user_id: user.user_id
         }
       })
       if (relation !== null) {
-        await Client_trainer.destroy({
+        const userTrainer = await Client_trainer.findAll({
+          where: {
+            client_user_id: user.user_id,
+            trainer_user_id: trainer_id
+          }
+        })
+        if (userTrainer.length === 0) {
+          await Client_trainer.destroy({
           where: {
             client_user_id: user.user_id
           }
-        })
-      }
-      await Client_trainer.create({client_user_id: user_id, trainer_user_id: trainer_id})
+          })
+          await Client_trainer.create({
+            client_user_id: user_id, 
+            trainer_user_id: trainer_id
+          })
+          updatedValues += 1}
+      }  
     }
-    await User.update(checkedData, {
+    const usersEmails = await User.findAll({
+      attributes: ['email'],
+      where: {
+        user_id: {[Op.ne]: user.user_id}
+      }
+    })
+    for (email of usersEmails) {
+      if (email.dataValues.email === checkedData.data.email) {
+        throw new Error('Email already exists')
+      }
+    }
+    await User.update(checkedData.data, {
       where: {
         user_id,
       }
@@ -171,7 +218,8 @@ const putUsersData = async (req, res) => {
     res.status(200)
     res.json({
       ok: true,
-      msg: 'Client correctly updated'
+      msg: 'Client correctly updated',
+      updatedValues
     })  
   } 
   catch(err) {
@@ -181,7 +229,20 @@ const putUsersData = async (req, res) => {
         ok: false,
         error: "express-validator errors"
       })
-    } else {
+    }
+    else if (err.message == 'Trainer does not exist') {
+      res.status(400).json({
+        ok: "false",
+        msg: 'Trainer does not exist'
+    })
+    } 
+    else if (err.message == 'Email already exists') {
+      res.status(400).json({
+        ok: "false",
+        msg: 'Trainer does not exist'
+    })
+    } 
+    else {
       res.status(500).json({
       ok: false,
       error: 'Something failed on server side'

@@ -60,7 +60,7 @@ const handleLogin = async (req, res, next) => {
         msg: "Error: Incorrect password"
       })
     }
-    else if (err.message == 'Erroe: User doesn\'t exists.') {
+    else if (err.message == 'User doesn\'t exists.') {
       res.status(400).json({
         ok: "false",
         msg: "User does not exist"

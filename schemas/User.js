@@ -22,12 +22,12 @@ const userSchema = z.object({
 
 const userUpdateSchema = z.object({
   email: z.string().min(1, { message: "This field has to be filled." }).email("This is not a valid email."),
-  password: z.string('Invalid password').min(8).max(30),
+  password: z.string('Invalid password').min(8, 'Password must contain at least 8 characters').max(30, 'Password can\'t have more than 30 characters'),
   phone_number: z.string().min(10).regex(phoneRegex, 'Must contain the phone prefix eg. +598...'),
   emergency_number: z.string().min(10).regex(phoneRegex, 'Must contain the phone prefix eg. +598...'),
-  insurance: z.string().min(1),
-  role_id: z.number().max(5).array().nonempty(),
-  trainer_id: z.number()
+  insurance: z.string('Insurnce must be a string').min(1),
+  role_id: z.number('Role id must be a number').max(5, 'There is no role with id larger than 5').array().nonempty('The role array cannot be empty'),
+  trainer_id: z.number('Trainer id must be a number').nullable()
 })
 
 module.exports = {
