@@ -61,6 +61,21 @@ const getUsersByRole = async(req, res) => {
   }
 }
 
+const getTrainerClients = async(req, res) => {
+  try {
+    const trainer_id = req.user.user_id;
+    const users = await User.findAll({
+      include: {
+        model: Client_trainer,
+        where: { trainer_user_id: trainer_id }
+      }
+    })
+    res.status(200).json({ok: true, data: users})
+  } catch (err) {
+    res.status(500).json({ok: false, msg: 'An error ocurred on server side'})
+  }
+}
+
 const postNewUser = async(req, res) => {
   try{
     const { role_id, trainer_id } = req.body;
@@ -257,5 +272,6 @@ module.exports = {
     deleteUser,
     postNewUser,
     putUsersData,
-    getUserById
+    getUserById,
+    getTrainerClients,
 }

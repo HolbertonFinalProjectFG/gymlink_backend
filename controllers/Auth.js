@@ -28,6 +28,7 @@ const handleLogin = async (req, res, next) => {
       roles_array.push(role.dataValues.role_id)
     }
     const token = jwt.sign({
+      user_id: user[0].dataValues.user_id,
       user_role: roles_array,
     }, JWT_SECRET_KEY, {
       expiresIn: 1000 * 60 * 60 * 8
