@@ -52,6 +52,16 @@ User.hasMany(Client_trainer, {
     onDelete: "CASCADE"
 });
 
+Client_trainer.belongsTo(User, {
+    foreignKey: 'trainer_user_id',
+    targetKey: 'user_id',
+})
+
+Client_trainer.belongsTo(User, {
+    foreignKey: 'client_user_id',
+    targetKey: 'user_id',
+})
+
 Routine_template.hasMany(Routine, {
     foreignKey: 'routine_template_id',
     sourceKey: 'routine_template_id',

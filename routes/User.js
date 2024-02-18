@@ -12,9 +12,9 @@ User.get('/:user_id', PermissionsMiddleware([1, 2, 3]), getUserById); // Permiss
 
 User.get('/role/:role_id', PermissionsMiddleware([1, 2]), getUsersByRole);
 
-User.get('/trainer/:user_id', PermissionsMiddleware([3]), getTrainerClients)
+User.get('/trainer/:user_id', PermissionsMiddleware([3]), getTrainerClients);
 
-User.post('/', postNewUser);
+User.post('/', PermissionsMiddleware([1, 2]), postNewUser);
 
 User.patch('/:user_id', PermissionsMiddleware([1, 2]), putUsersData);
 

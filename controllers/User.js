@@ -6,6 +6,7 @@ const { Client_trainer } = require('../models/Client_trainer.js');
 const { userUpdateSchema, userSchema } = require('../schemas/User.js');
 const { ZodError} = require('zod');
 const { Op } = require('sequelize')
+const Sequelize = require('sequelize')
 
 const getAllUsers = async(req, res) => {
   try{
@@ -64,15 +65,23 @@ const getUsersByRole = async(req, res) => {
 const getTrainerClients = async(req, res) => {
   try {
     const trainer_id = req.user.user_id;
-    const users = await User.findAll({
+    const clients = await Client_trainer.findAll({
+      where: {
+        trainer_user_id: trainer_id,
+      },
       include: {
-        model: Client_trainer,
-        where: { trainer_user_id: trainer_id }
+        model: User,
       }
-    })
-    res.status(200).json({ok: true, data: users})
-  } catch (err) {
-    res.status(500).json({ok: false, msg: 'An error ocurred on server side'})
+    });
+    let users = []
+    for (const client of clients) {
+      users.push(client.dataValues.user)
+
+    }
+    res.status(200).json({ ok: true, data: users });
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ok: false, msg: 'An error ocurred on server side'});
   }
 }
 
@@ -274,4 +283,6 @@ module.exports = {
     putUsersData,
     getUserById,
     getTrainerClients,
+    getUserById,
+    getTrainerClients
 }
