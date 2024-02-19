@@ -11,7 +11,7 @@ const Mg_template = sequelize.define('mg_templates', {
     type: DataTypes.STRING(50),
   },
   content: {
-    type: DataTypes.JSON,
+    type: DataTypes.ARRAY(DataTypes.STRING),
   },
 });
 

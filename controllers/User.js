@@ -6,7 +6,6 @@ const { Client_trainer } = require('../models/Client_trainer.js');
 const { userUpdateSchema, userSchema } = require('../schemas/User.js');
 const { ZodError} = require('zod');
 const { Op } = require('sequelize')
-const Sequelize = require('sequelize')
 
 const getAllUsers = async(req, res) => {
   try{
@@ -100,8 +99,11 @@ const postNewUser = async(req, res) => {
     for (let i = 0; i < numOfRoles; i++) {
       User_role.create({user_id: newUser.user_id, role_id: role_id[i]});
     }
-    if (trainer_id)
-      await Client_trainer.create({client_user_id: newUser.user_id, trainer_user_id: trainer_id});
+    if (trainer_id) {
+      const trainer = await User.findByPk(trainer_id);
+      if (trainer !== null)
+        await Client_trainer.create({client_user_id: newUser.user_id, trainer_user_id: trainer_id});    
+    }
     res.status(200).json({ok: true, msg: 'User correctly added'});
   } catch(err) {
     console.log(err);
@@ -276,13 +278,11 @@ const putUsersData = async (req, res) => {
 }
 
 module.exports = {
-    getAllUsers,
-    getUsersByRole,
-    deleteUser,
-    postNewUser,
-    putUsersData,
-    getUserById,
-    getTrainerClients,
-    getUserById,
-    getTrainerClients
+  getAllUsers,
+  getUsersByRole,
+  getUserById,
+  getTrainerClients,
+  postNewUser,
+  putUsersData,
+  deleteUser,
 }
