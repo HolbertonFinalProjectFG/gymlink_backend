@@ -1,10 +1,11 @@
 const { sequelize } = require('./database/database.js')
 const express = require('express')
 const { PORT, FRONTED_HOST } = require('./config.js')
-const { Gym , Client_trainer , Routine_template , Routine,User_role , User_routine , User , Role , Relation , Inventory} = require('./models/index.js')
+const { Gym , Client_trainer , Mg_template , Routine,User_role , User_routine , User , Role , Relation , Inventory} = require('./models/index.js')
 const { User: userRouter } = require('./routes/User.js')
 const { Inventory: inventoryRouter } = require('./routes/Inventory.js')
 const { Auth: authRouter } = require('./routes/Auth.js')
+const { Routine: routineRouter } = require('./routes/Routine.js');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 
@@ -31,9 +32,10 @@ app.use(function(req, res, next) {
 app.use('/api/user', userRouter)
 app.use('/api/inventory', inventoryRouter)
 app.use('/api/login', authRouter)
+app.use('/api/routine', routineRouter);
 
 app.listen(PORT, async () => {
-    await sequelize.sync()
+    await sequelize.sync({ force: true });
     try {
     await Role.bulkCreate([
         {role_name: "superuser"},

@@ -1,6 +1,6 @@
 const { Gym } = require('./Gym.js')
 const { Client_trainer } = require('./Client_trainer.js')
-const { Routine_template } = require('./Routine_template.js')
+const { Mg_template } = require('./Mg_template.js')
 const { Routine } = require('./Routine.js')
 const { User_role } = require('./User_role.js')
 const { User_routine } = require('./User_routine.js')
@@ -16,7 +16,7 @@ Gym.hasMany(User, {
     onDelete: "CASCADE"
 });
 
-Gym.hasMany(Routine_template, {
+Gym.hasMany(Mg_template, {
     foreignKey: 'gym_id',
     socrceKey: 'gym_id',
     onDelete: "CASCADE"
@@ -61,12 +61,6 @@ Client_trainer.belongsTo(User, {
     foreignKey: 'client_user_id',
     targetKey: 'user_id',
 })
-
-Routine_template.hasMany(Routine, {
-    foreignKey: 'routine_template_id',
-    sourceKey: 'routine_template_id',
-    onDelete: "CASCADE"
-});
 
 Routine.hasMany(User_routine, {
     foreignKey: 'routine_id',
