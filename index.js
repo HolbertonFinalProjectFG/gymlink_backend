@@ -35,7 +35,7 @@ app.use('/api/login', authRouter)
 app.use('/api/routine', routineRouter);
 
 app.listen(PORT, async () => {
-    await sequelize.sync({ force: true });
+    await sequelize.sync();
     try {
     await Role.bulkCreate([
         {role_name: "superuser"},
