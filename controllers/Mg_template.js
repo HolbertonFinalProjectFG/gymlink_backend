@@ -21,7 +21,7 @@ const postMgTemplate = async(req, res) => {
     const Mg = await Mg_template.create(checkedData.data)
     res.status(200).json({
       ok:true,
-      data: Mg
+      msg: 'Muscular group correctly added'
     })
   } catch(err) {
     console.log(err);

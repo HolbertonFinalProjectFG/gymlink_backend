@@ -5,6 +5,7 @@ function PermissionsMiddleware(roles) {
         throw new Error('Permissions error');
       next();
     } catch(err) {
+      console.log(err)
       res.status(401).json({ok: false, msg: err.message});
     }
   }
