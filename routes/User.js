@@ -8,7 +8,7 @@ User.use(JwtMiddleware)
 
 User.get('/', PermissionsMiddleware([1, 2, 3]), getAllUsers);
 
-User.get('/:user_id', PermissionsMiddleware([1, 2, 3]), getUserById); // Permissions for trainer??
+User.get('/:user_id', PermissionsMiddleware([1, 2, 3]), getUserById);
 
 User.get('/role/:role_id', PermissionsMiddleware([1, 2]), getUsersByRole);
 
