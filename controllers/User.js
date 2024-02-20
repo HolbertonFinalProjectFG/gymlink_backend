@@ -149,7 +149,6 @@ const putUsersData = async (req, res) => {
     const { user_id } = req.params
     let updatedValues = 0                                           
     const checkedData = userUpdateSchema.partial().safeParse(req.body)
-    console.log(checkedData)
     if (checkedData.success === false) {
       throw new ZodError(checkedData.error)
     }

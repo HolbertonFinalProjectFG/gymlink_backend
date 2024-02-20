@@ -1,10 +1,10 @@
-const { Mg_template } = require('../models/Mg_template'); 
+const { Mg_template } = require('../models/Mg_template');
+const { mgSchema } = require('../schemas/Mg_template');
+const { ZodError } = require('zod')
 
-const getRoutinesTemplates = async(req, res) => {
+const getMgTemplate = async(req, res) => {
   try {
-    const routines = await Mg_template.findAll({
-      attributes: ['content'],
-    });
+    const routines = await Mg_template.findAll();
     res.status(200).json({ ok: true, data: routines });
   } catch (err) {
     console.log(err);
@@ -14,16 +14,33 @@ const getRoutinesTemplates = async(req, res) => {
   
 const postMgTemplate = async(req, res) => {
   try{
-    const routineTemplate = req.body;  
-    const Mg = await Mg_template.create(routineTemplate)
-    res.status(200).json({ok:true, data: Mg})
+    const checkedData = mgSchema.safeParse(req.body)
+    if (checkedData.success === false) {
+      throw new ZodError(checkedData.error)
+    }
+    const Mg = await Mg_template.create(checkedData.data)
+    res.status(200).json({
+      ok:true,
+      data: Mg
+    })
   } catch(err) {
     console.log(err);
-    res.status(400).json({ok: false, typeErr: err.message})
+    if (err instanceof ZodError) {
+      res.status(400).json({
+        ok: false,
+        msg: 'express-validator errors'
+      })
+    }
+    else {
+      res.status(500).json({
+        ok: false,
+        msg: 'Something failed on server side'
+      })
+    }
   }
 }
 
 module.exports = {
-  getRoutinesTemplates,
+  getMgTemplate,
   postMgTemplate,
 }

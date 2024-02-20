@@ -5,7 +5,7 @@ const { Gym , Client_trainer , Mg_template , Routine,User_role , User_routine , 
 const { User: userRouter } = require('./routes/User.js')
 const { Inventory: inventoryRouter } = require('./routes/Inventory.js')
 const { Auth: authRouter } = require('./routes/Auth.js')
-const { Routine: routineRouter } = require('./routes/Mg_template.js');
+const { Mg: MgRouter } = require('./routes/Mg_template.js');
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 
@@ -32,7 +32,7 @@ app.use(function(req, res, next) {
 app.use('/api/user', userRouter)
 app.use('/api/inventory', inventoryRouter)
 app.use('/api/login', authRouter)
-app.use('/api/mg', routineRouter);
+app.use('/api/mg', MgRouter);
 
 app.listen(PORT, async () => {
     await sequelize.sync();
