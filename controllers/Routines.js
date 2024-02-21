@@ -2,6 +2,7 @@ const { sequelize } = require('../database/database')
 const { ZodError } = require('zod')
 const { Routine } = require('../models/Routine')
 const { Mg_template } = require('../models/Mg_template')
+const { routineSchema } = require('../schemas/Routine')
 
 const getRoutines = async(req, res) => {
     try {
@@ -21,7 +22,11 @@ const getRoutines = async(req, res) => {
 
 const postRoutine = async(req, res) => {
     try {
-        const week = req.body                  // FALTA ZOD VALIDATION
+        const body = routineSchema.partial().safeParse(req.body)
+        if (body.success === false){
+            throw new ZodError()
+        }
+        const week = body.data
         let array = []
         for (const day in week){
             let muscularGroup = []
@@ -41,6 +46,9 @@ const postRoutine = async(req, res) => {
             routine[i] = muscularGroup
             i++
         }
+        await Routine.create({
+            personalized_content: routine
+        })
         res.status(200).json({
             ok: true,
             data: routine
@@ -68,7 +76,35 @@ const postRoutine = async(req, res) => {
     }
 }
 
+const deleteRoutine = async(req, res) => {
+    try {
+        const { routine_id } = req.params
+        const routine = await Routine.findByPk(routine_id)
+        console.log(routine_id)
+        console.log(routine)
+        if (routine !== null) {
+            routine.destroy()
+            res.status(200).json({
+                ok: true,
+                msg: `Routine with id ${routine_id} deleted successfully`
+            })
+        } else {
+            res.status(404).json({
+                ok: false,
+                msg: `Routine with id ${routine_id} does not exist`
+            })
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({
+            ok: false,
+            msg: 'Something failed in the server side'
+        })
+    }
+}
+
 module.exports = {
     getRoutines,
-    postRoutine
+    postRoutine,
+    deleteRoutine
 }

@@ -43,12 +43,12 @@ const postMgTemplate = async(req, res) => {
 const deleteMgTemplate = async(req, res) => {
   try {
     const { mg_template_id } = req.params;
-    const mg = await Mg_template.findByPK(mg_template_id);
-    if (!mg === null) {
+    const mg = await Mg_template.findByPk(mg_template_id);
+    if (mg !== null) {
       await mg.destroy();
       res.status(200).json({
         ok: true,
-        msg: `Mg_template with id ${mg_template_id} deleted succesfully`
+        msg: `Mg_template with id ${mg_template_id} deleted successfully`
       });
     } else {
       res.status(404).json({
@@ -57,6 +57,7 @@ const deleteMgTemplate = async(req, res) => {
       });
     }
   } catch (err) {
+    console.log(err)
     res.status(500).json({
       ok: false,
       msg: 'Something failed on server side'

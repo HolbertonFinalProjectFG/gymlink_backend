@@ -16,7 +16,8 @@ const userSchema = z.object({
   phone_number: z.string().min(10).max(17).regex(phoneRegex, 'Must contain the phone prefix eg. +598...'),
   emergency_number: z.string().min(10).max(17).regex(phoneRegex, 'Must contain the phone prefix eg. +598...'),
   insurance: z.string().min(1),
-  role_id: z.number().max(5).array().nonempty()
+  role_id: z.number().max(5).array().nonempty(),
+  trainer_id: z.number('Trainer id must be a number').nullable()
 });
 
 

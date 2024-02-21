@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const Routines = Router()
-const { getRoutines, postRoutine} = require('../controllers/Routines.js')
+const { getRoutines, postRoutine, deleteRoutine} = require('../controllers/Routines.js')
 const { JwtMiddleware } = require('../middlewares/JwtMiddleware');
 const { PermissionsMiddleware } = require('../middlewares/RolePermissionsMiddleware');
 
@@ -12,7 +12,7 @@ Routines.get('/', getRoutines)
 
 Routines.post('/', postRoutine)
 
-Routines.delete('/', )
+Routines.delete('/:routine_id', deleteRoutine)
 
 module.exports = {
     Routines
