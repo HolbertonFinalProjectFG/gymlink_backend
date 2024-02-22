@@ -1,6 +1,7 @@
 const e = require('express');
 const sequelize = require('../database/database.js');
-const {User} = require('../models/User.js');
+const { User } = require('../models/User.js');
+const { Role } = require('../models/Role.js');
 const { User_role } = require('../models/User_role.js');
 const { Client_trainer } = require('../models/Client_trainer.js');
 const { userUpdateSchema, userSchema } = require('../schemas/User.js');

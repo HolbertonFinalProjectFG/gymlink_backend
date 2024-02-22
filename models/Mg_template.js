@@ -2,7 +2,7 @@ const { sequelize } = require('../database/database.js')
 const { DataTypes} = require('sequelize');
 
 const Mg_template = sequelize.define('mg_templates', {
-  gm_template_id: {
+  mg_template_id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
