@@ -3,6 +3,8 @@ const { ZodError } = require('zod')
 const { Routine } = require('../models/Routine')
 const { Mg_template } = require('../models/Mg_template')
 const { routineSchema } = require('../schemas/Routine')
+const { User } = require('../models/User')
+const { User_routine } = require('../models/User_routine')
 
 const getRoutines = async(req, res) => {
     try {
@@ -22,11 +24,24 @@ const getRoutines = async(req, res) => {
 
 const postRoutine = async(req, res) => {
     try {
-        const body = routineSchema.partial().safeParse(req.body)
-        if (body.success === false){
+        const checkedData = routineSchema.partial().safeParse(req.body)
+
+        if (checkedData.success === false){
             throw new ZodError()
         }
-        const week = body.data
+        const user = await User.findByPk(checkedData.user_id)
+        if (user === null) {
+            throw new Error('User does not exist')
+        }
+        const relation = await User_routine.findAll({
+            where: {
+                client_user_id: user.user_id
+            }
+        })
+        if (relation.length === 0) {
+            await relation.destroy()
+        }
+        const week = checkedData.data.content
         let array = []
         for (const day in week){
             let muscularGroup = []
@@ -46,8 +61,13 @@ const postRoutine = async(req, res) => {
             routine[i] = muscularGroup
             i++
         }
-        await Routine.create({
+        const finalRoutine = await Routine.create({
             personalized_content: routine
+        })
+        await User_routine.create({
+            client_user_id: user.user_id,
+            routine_id: finalRoutine.routine_id
+
         })
         res.status(200).json({
             ok: true,
@@ -80,8 +100,6 @@ const deleteRoutine = async(req, res) => {
     try {
         const { routine_id } = req.params
         const routine = await Routine.findByPk(routine_id)
-        console.log(routine_id)
-        console.log(routine)
         if (routine !== null) {
             routine.destroy()
             res.status(200).json({

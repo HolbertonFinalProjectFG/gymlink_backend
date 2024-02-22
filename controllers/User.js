@@ -21,27 +21,35 @@ const getUserById = async(req, res) => {
   const { user_id } = req.params;
   try {
     const users = await User.findAll({
-      where: {
-        user_id: user_id
-      }
-    });
-    const roles = await User_role.findAll({
-      where: {
-        user_id: user_id
+      where: { user_id },
+      include: {
+        model: User_role,
+        include: { model: Role }
       }
     });
 
-    const roleNames = roles.map(role => role.role_id);
+    if (!users || users.length === 0) {
+      return res.status(404).json({ ok: false, msg: "User not found" });
+    }
 
-    const usersWithRoles = users.map(user => ({
-      ...user.toJSON(), // Convert Sequelize instance to plain object
-      roles: roleNames
+    const userData = users.map(user => ({
+      user_id: user.user_id,
+      name: user.name,
+      surname: user.surname,
+      CI: user.CI,
+      email: user.email,
+      birth_date: user.birth_date,
+      password: user.password,
+      phone_number: user.phone_number,
+      emergency_number: user.emergency_number,
+      insurance: user.insurance,
+      role: user.user_roles.map(userRole => userRole.role.role_name).join(", ")
     }));
 
-    res.status(200).json({ok: true, data: usersWithRoles   });
+    res.status(200).json({ ok: true, data: userData });
   } catch (err){
     console.log(err)
-      res.status(500).json({ok: false, msg: "An error ocurred on server side"});
+      res.status(500).json({ok: false, msg: "An error ocurred on server side", err: err.message});
   }
 };
 

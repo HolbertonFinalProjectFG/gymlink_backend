@@ -1,8 +1,8 @@
 const { Router } = require('express')
 const Routines = Router()
 const { getRoutines, postRoutine, deleteRoutine} = require('../controllers/Routines.js')
-const { JwtMiddleware } = require('../middlewares/JwtMiddleware');
-const { PermissionsMiddleware } = require('../middlewares/RolePermissionsMiddleware');
+const { JwtMiddleware } = require('../middlewares/JwtMiddleware.js');
+const { PermissionsMiddleware } = require('../middlewares/RolePermissionsMiddleware.js');
 
 const roles = [3]
 
