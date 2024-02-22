@@ -74,6 +74,14 @@ Role.hasMany(User_role, {
     onDelete: "CASCADE"
 });
 
+User_role.belongsTo(User, { 
+    foreignKey: 'user_id' 
+});
+
+User_role.belongsTo(Role, { 
+    foreignKey: 'role_id' 
+});
+
 module.exports = {
     Relation
 }
