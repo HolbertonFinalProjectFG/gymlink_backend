@@ -24,24 +24,26 @@ const getRoutines = async(req, res) => {
 
 const postRoutine = async(req, res) => {
     try {
-        const checkedData = routineSchema.partial().safeParse(req.body)
+        //const checkedData = routineSchema.partial().safeParse(req.body)
+        const checkedData = req.body
 
-        if (checkedData.success === false){
-            throw new ZodError()
-        }
+        //if (checkedData.success === false){
+        //    throw new ZodError()
+        //}
         const user = await User.findByPk(checkedData.user_id)
         if (user === null) {
             throw new Error('User does not exist')
         }
-        const relation = await User_routine.findAll({
+        const relation = await User_routine.findOne({
             where: {
                 client_user_id: user.user_id
             }
         })
-        if (relation.length === 0) {
+        if (relation.length !== 0) {
             await relation.destroy()
         }
-        const week = checkedData.data.content
+        //const week = checkedData.data.content
+        const week = checkedData.content
         let array = []
         for (const day in week){
             let muscularGroup = []
