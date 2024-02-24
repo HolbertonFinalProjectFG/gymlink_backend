@@ -39,7 +39,7 @@ const postRoutine = async(req, res) => {
                 client_user_id: user.user_id
             }
         })
-        if (relation.length !== 0) {
+        if (relation !== null) {
             await relation.destroy()
         }
         //const week = checkedData.data.content
