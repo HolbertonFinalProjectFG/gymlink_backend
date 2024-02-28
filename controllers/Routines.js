@@ -22,6 +22,37 @@ const getRoutines = async(req, res) => {
     }
 }
 
+const getRoutineById = async(req, res) => {                        //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+    try {                                                          //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        const { user_id } = req.params                             //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        const routine = await User_routine.findOne({               //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+            where: {                                               //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+                client_user_id: user_id                            //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+            }                                                      //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        })                                                         //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        console.log(routine)                                       //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+    if (routine !== null) {                                        //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        console.log(routine)                                       //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        const rou = await Routine.findOne({                        //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+            where: {                                               //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+                routine_id: routine.dataValues.routine_id          //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+            }                                                      //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        })                                                         //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        res.status(200).json({                                     //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+            ok: true,                                              //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+            data: rou                                              //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+        })                                                         //FRANCO, FRANCO, ESTO HAY QUE ARREGLARLO PORQUE ES UNA CHANCHADA
+    }
+    else {
+        res.status(404).json({
+            ok: false,
+            msg: 'routine does not exist'
+        })
+    }} catch (err) {
+        console.log(err)
+    }
+}
+
 const postRoutine = async(req, res) => {
     try {
         //const checkedData = routineSchema.partial().safeParse(req.body)
@@ -126,5 +157,6 @@ const deleteRoutine = async(req, res) => {
 module.exports = {
     getRoutines,
     postRoutine,
-    deleteRoutine
+    deleteRoutine,
+    getRoutineById
 }

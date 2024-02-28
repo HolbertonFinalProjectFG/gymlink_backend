@@ -3,6 +3,7 @@ const User = express.Router();
 const { getAllUsers, postNewUser, deleteUser, putUsersData, getUserById, getUsersByRole, getTrainerClients } = require('../controllers/User');
 const { JwtMiddleware } = require('../middlewares/JwtMiddleware');
 const { PermissionsMiddleware } = require('../middlewares/RolePermissionsMiddleware');
+const { getRoutineById } = require('../controllers/Routines');
 
 User.use(JwtMiddleware)
 
@@ -13,6 +14,8 @@ User.get('/:user_id', PermissionsMiddleware([1, 2, 3]), getUserById);
 User.get('/role/:role_id', PermissionsMiddleware([1, 2]), getUsersByRole);
 
 User.get('/trainer/clients', PermissionsMiddleware([3]), getTrainerClients);
+
+User.get('/trainer/clients/:user_id', getRoutineById) // ESTO HAY QUE CAMBIARLO A ROUTINES ID
 
 User.post('/', PermissionsMiddleware([1, 2]), postNewUser);
 
