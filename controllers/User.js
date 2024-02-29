@@ -113,6 +113,7 @@ const  getClientRoutines = async(req, res) => {
   try {
     const { user_id, routine_id } = req.params;
     const clientRoutine = await Routine.findOne({
+      attributes: ['personalized_content'],
       where: {
         routine_id,
       },
@@ -125,9 +126,6 @@ const  getClientRoutines = async(req, res) => {
         attributes: {
           exclude: ['createdAt', 'updatedAt']
         }
-      },
-      attributes: {
-        exclude: ['createdAt', 'updatedAt']
       }
     });
     if (!clientRoutine || clientRoutine.length === 0)
@@ -135,7 +133,7 @@ const  getClientRoutines = async(req, res) => {
 
     res.status(200).json({
       ok: true,
-      data: clientRoutine,
+      data: clientRoutine.personalized_content,
     });
   } catch (err) {
     console.log(err);

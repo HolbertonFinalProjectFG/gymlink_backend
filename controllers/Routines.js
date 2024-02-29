@@ -48,7 +48,11 @@ const postRoutine = async(req, res) => {
         for (const day in week){
             let muscularGroup = []
             for (const id of week[day]) {
-                const gm = await Mg_template.findByPk(id)
+                const gm = await Mg_template.findByPk(id, {
+                    attributes: {
+                        exclude: ['createdAt', 'updatedAt']
+                    }
+                })
                 muscularGroup.push(gm)
             }
             if (muscularGroup.includes(null)) {
