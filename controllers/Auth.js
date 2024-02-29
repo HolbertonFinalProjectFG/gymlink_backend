@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { User } = require('../models/User')
+const { Role } = require('../models/Role')
 const { User_role } = require('../models/User_role')
 const { JWT_SECRET_KEY } = require('../config')
 
@@ -39,18 +40,20 @@ const handleLogin = async (req, res, next) => {
       sameSite: 'none',
       secure: true
     })
-    const roleNames = {
-      1: "superuser",
-      2: "admin",
-      3: "trainer",
-      4: "client",
-      5: "employee",
+
+    const allRoles = await Role.findAll();
+    let roleName;
+    for (const role of allRoles) {
+      if (roles_array[0] === role.dataValues.role_id) {
+        roleName = role.dataValues.role_name;
+        break;
+      }
     }
     res.status(200).json({
       ok: true,
       msg: "User succesfully logged",
       role_id: roles_array[0],
-      role_name: roleNames[roles_array[0]],
+      role_name: roleName
     })
   }
   catch (err) {

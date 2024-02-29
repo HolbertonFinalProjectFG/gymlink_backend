@@ -68,6 +68,11 @@ Routine.hasMany(User_routine, {
     onDelete: "CASCADE"
 });
 
+User_routine.belongsTo(Routine, {
+    foreignKey: 'routine_id',
+    targetKey: 'routine_id'
+})
+
 Role.hasMany(User_role, {
     foreignKey: 'role_id',
     sourceKey: 'role_id',

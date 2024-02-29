@@ -2,6 +2,8 @@ const e = require('express');
 const sequelize = require('../database/database.js');
 const { User } = require('../models/User.js');
 const { Role } = require('../models/Role.js');
+const { Routine } = require('../models/Routine')
+const { User_routine } = require('../models/User_routine.js');
 const { User_role } = require('../models/User_role.js');
 const { Client_trainer } = require('../models/Client_trainer.js');
 const { userUpdateSchema, userSchema } = require('../schemas/User.js');
@@ -79,17 +81,75 @@ const getTrainerClients = async(req, res) => {
       },
       include: {
         model: User,
+        include: {
+          model: User_routine,
+          include: {
+            model: Routine
+          },
+          attributes: {
+            exclude: ['createdAt', 'updatedAt']
+          }
+        },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
       }
     });
     let users = []
     for (const client of clients) {
       users.push(client.dataValues.user)
-
     }
     res.status(200).json({ ok: true, data: users });
   } catch (error) {
     console.log(error)
     res.status(500).json({ok: false, msg: 'An error ocurred on server side'});
+  }
+}
+
+const  getClientRoutines = async(req, res) => {
+  try {
+    const { user_id, routine_id } = req.params;
+    const clientRoutine = await Routine.findOne({
+      where: {
+        routine_id,
+      },
+      include: {
+        model: User_routine,
+        where: {
+          routine_id,
+          client_user_id: user_id,
+        },
+        attributes: {
+          exclude: ['createdAt', 'updatedAt']
+        }
+      },
+      attributes: {
+        exclude: ['createdAt', 'updatedAt']
+      }
+    });
+    if (!clientRoutine || clientRoutine.length === 0)
+      throw new Error('Routine not assigned');
+
+    res.status(200).json({
+      ok: true,
+      data: clientRoutine,
+    });
+  } catch (err) {
+    console.log(err);
+    if (err.message === 'Routine not assigned') {
+      res.status(400).json({
+        ok: false,
+        msg: 'Routine is not assigned'
+      });
+    } else {
+      res.status(500).json({
+        ok: false,
+        msg: 'Something failed on server side'
+      });
+    };
   }
 }
 
@@ -290,6 +350,7 @@ module.exports = {
   getUsersByRole,
   getUserById,
   getTrainerClients,
+  getClientRoutines,
   postNewUser,
   putUsersData,
   deleteUser,
