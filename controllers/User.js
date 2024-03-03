@@ -104,7 +104,7 @@ const getTrainerClients = async(req, res) => {
       if (client.dataValues.user.user_routines[0].routine_id){
         const userId = client.dataValues.user.user_id;
         const routineId = client.dataValues.user.user_routines[0].routine_id;
-        userJson.link = `http://localhost:3000/api/user/client/routines/${userId}/${routineId}`;
+        userJson.link = `/api/user/client/routines/${userId}/${routineId}`;
       } else {
         userJson.link = null;
       }

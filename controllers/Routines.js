@@ -78,7 +78,7 @@ const postRoutine = async(req, res) => {
         res.status(200).json({
             ok: true,
             data: routine,
-            link: `http://localhost:3000/api/user/client/routines/${user.user_id}/${finalRoutine.routine_id}`
+            link: `/api/user/client/routines/${user.user_id}/${finalRoutine.routine_id}`
         })
     } catch (err) {
         console.log(err)
