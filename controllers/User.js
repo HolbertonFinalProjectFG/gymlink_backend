@@ -117,48 +117,6 @@ const getTrainerClients = async(req, res) => {
   }
 }
 
-const  getClientRoutines = async(req, res) => {
-  try {
-    const { user_id, routine_id } = req.params;
-    const clientRoutine = await Routine.findOne({
-      attributes: ['personalized_content'],
-      where: {
-        routine_id,
-      },
-      include: {
-        model: User_routine,
-        where: {
-          routine_id,
-          client_user_id: user_id,
-        },
-        attributes: {
-          exclude: ['createdAt', 'updatedAt']
-        }
-      }
-    });
-    if (!clientRoutine || clientRoutine.length === 0)
-      throw new Error('Routine not assigned');
-
-    res.status(200).json({
-      ok: true,
-      data: clientRoutine.personalized_content,
-    });
-  } catch (err) {
-    console.log(err);
-    if (err.message === 'Routine not assigned') {
-      res.status(400).json({
-        ok: false,
-        msg: 'Routine is not assigned'
-      });
-    } else {
-      res.status(500).json({
-        ok: false,
-        msg: 'Something failed on server side'
-      });
-    };
-  }
-}
-
 const postNewUser = async(req, res) => {
   try{
     const { role_id, trainer_id } = req.body;
@@ -356,7 +314,6 @@ module.exports = {
   getUsersByRole,
   getUserById,
   getTrainerClients,
-  getClientRoutines,
   postNewUser,
   putUsersData,
   deleteUser,

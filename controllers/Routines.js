@@ -22,6 +22,33 @@ const getRoutines = async(req, res) => {
     }
 }
 
+const getRoutineById = async(req, res) => {
+  try {
+    const { routine_id } = req.params;
+    const routine = await Routine.findByPk(routine_id);
+    if(!routine)
+      throw new Error('Routine not found');
+
+    res.status(200).json({
+      ok: true,
+      data: routine.personalized_content,
+    });
+  } catch (err) {
+    console.log(err);
+    if (err.message === 'Routine not found') {
+      res.status(404).json({
+        ok: false,
+        msg: 'Routine not found'
+      });
+    } else {
+      res.status(500).json({
+        ok: false,
+        msg: 'Something failed on server side'
+      });
+    };
+  };
+};
+
 const postRoutine = async(req, res) => {
     try {
         //const checkedData = routineSchema.partial().safeParse(req.body)
@@ -130,6 +157,7 @@ const deleteRoutine = async(req, res) => {
 
 module.exports = {
     getRoutines,
+    getRoutineById,
     postRoutine,
     deleteRoutine
 }
