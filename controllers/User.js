@@ -100,7 +100,15 @@ const getTrainerClients = async(req, res) => {
     });
     let users = []
     for (const client of clients) {
-      users.push(client.dataValues.user)
+      const userJson = JSON.parse(JSON.stringify(client.dataValues.user));
+      if (client.dataValues.user.user_routines[0].routine_id){
+        const userId = client.dataValues.user.user_id;
+        const routineId = client.dataValues.user.user_routines[0].routine_id;
+        userJson.link = `http://localhost:3000/api/user/client/routines/${userId}/${routineId}`;
+      } else {
+        userJson.link = null;
+      }
+      users.push(userJson)
     }
     res.status(200).json({ ok: true, data: users });
   } catch (error) {
