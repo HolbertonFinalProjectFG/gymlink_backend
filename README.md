@@ -22,7 +22,7 @@ on paper.
 ***
 ## Members ##
 ### Facundo Sanchez ###
-Facundo is the project manager on Gymlink, he was in charge of organization, tasks, deadlines,   and communication with the team.  
+Facundo is the project manager on Gymlink, he was in charge of organization, tasks, deadlines   and communication with the team.  
 He also developed the front end role, in charge of making designs and programming all  
 the visual portion of the app.  
 LinkedIn:
@@ -61,8 +61,28 @@ LinkedIn:
 `Postman`
 ***
 ## Features ##
+### SuperUser section ###
+The most important section on the app, the superuser is the only role able to create  
+an admin.
 ### Admin Section ###
+In charge of managing the gym, the admin user has several sub sections, like  
+inventory or users.
+#### User managing ####
+In this section the admin is able to see, create, update and delete  
+all kinds of user except from other admins, and super users.
+#### Inventory managing ####
+Made for the inventory managing, in this section the admin can see, add,  
+modify and delete items from the gym inventory.
+### Trainer section ###
 #### Client managing ####
+In this section the trainer is able to see and modify clients data, and  
+seeing if they have a routine asigned.
+#### Routine section ####
+This view allows the trainer to create a custom routine and asign  
+it to a client.
+### See routine section ###
+By using a link (may change in future versions) a client of  
+the gym is able to see the routine a trainer asigned to them.
 ***
 ## Authors ##
 ***
