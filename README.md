@@ -6,8 +6,17 @@
     * [What is Gymlink](#what-is-gymlink)
     * [How it started](#how-it-started)
 2. [Members](#members)
+    * [Facundo Sanchez](#facundo-sanchez)
+    * [Facundo Villagra](#facundo-villagra)
+    * [Franco Musso](#franco-musso)
+    * [Gabriel Rossy](#gabriel-rossy)
+    * [Gaston Perego](#gaston-perego)
 3. [Tecnologies and tools](#tecnologies)
 4. [Features](#features)
+    * [SuperUser section](#superuser-section)
+    * [Admin section](#admin-section)
+    * [Trainer section](#trainer-section)
+    * [See routine section](#see-routine-section)
 5. [Authors](#authors)
 ***
 ## Introduction ##
@@ -85,4 +94,9 @@ By using a link (may change in future versions) a client of
 the gym is able to see the routine a trainer asigned to them.
 ***
 ## Authors ##
+Facundo Sanchez  
+Facundo Villagra
+Franco Musso
+Gabriel Rossy
+Gaston Perego
 ***
