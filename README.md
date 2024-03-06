@@ -19,7 +19,7 @@
     * [See routine section](#see-routine-section)
 5. [Authors](#authors)
 ***
-## Introduction ##
+## Introduction {#introduction} ##
 ### What is Gymlink ###
 Gymlink is a managing software made specifically for gym owners, allowing their  
 employees to efficiently manage the clients and the inventory of the gym, as well as  
@@ -95,8 +95,8 @@ the gym is able to see the routine a trainer asigned to them.
 ***
 ## Authors ##
 Facundo Sanchez  
-Facundo Villagra
-Franco Musso
-Gabriel Rossy
+Facundo Villagra  
+Franco Musso  
+Gabriel Rossy  
 Gaston Perego
 ***
