@@ -19,7 +19,7 @@
     * [See routine section](#see-routine-section)
 5. [Authors](#authors)
 ***
-## Introduction ## {#introduction}
+## Introduction ##
 ### What is Gymlink ###
 Gymlink is a managing software made specifically for gym owners, allowing their  
 employees to efficiently manage the clients and the inventory of the gym, as well as  
