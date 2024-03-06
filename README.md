@@ -52,8 +52,17 @@ frontend teams.
 LinkedIn:
 ***
 ## Tecnologies and tools ##
+`NodeJS` 
+`Express`
+`Zod`
+`Sequelize`
+`PostgreSQL`
+`DBeaver`
+`Postman`
 ***
 ## Features ##
+### Admin Section ###
+#### Client managing ####
 ***
 ## Authors ##
 ***
