@@ -8,7 +8,7 @@ const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD || "POC_gimlink"
 const POSTGRES_DB = process.env.POSTGRES_DB || "gymlink_db"
 const DB_HOST = process.env.DB_HOST || "database"
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "YiLaeshRzfAYaiFjyVBDnintFsebaVhs"
-const FRONTED_HOST = process.env.FRONTED_HOST || "http://localhost:5173"
+const FRONTED_HOST = process.env.FRONTED_HOST || "https://gymlink-cweybgrrnq-uc.a.run.app"
 
 module.exports = {
     PORT,

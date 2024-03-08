@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { User } = require('../models/User')
+const { Role } = require('../models/Role')
 const { User_role } = require('../models/User_role')
 const { JWT_SECRET_KEY } = require('../config')
 
@@ -28,6 +29,7 @@ const handleLogin = async (req, res, next) => {
       roles_array.push(role.dataValues.role_id)
     }
     const token = jwt.sign({
+      user_id: user[0].dataValues.user_id,
       user_role: roles_array,
     }, JWT_SECRET_KEY, {
       expiresIn: 1000 * 60 * 60 * 8
@@ -38,18 +40,20 @@ const handleLogin = async (req, res, next) => {
       sameSite: 'none',
       secure: true
     })
-    const roleNames = {
-      1: "superuser",
-      2: "admin",
-      3: "trainer",
-      4: "client",
-      5: "employee",
+
+    const allRoles = await Role.findAll();
+    let roleName;
+    for (const role of allRoles) {
+      if (roles_array[0] === role.dataValues.role_id) {
+        roleName = role.dataValues.role_name;
+        break;
+      }
     }
     res.status(200).json({
       ok: true,
       msg: "User succesfully logged",
       role_id: roles_array[0],
-      role_name: roleNames[roles_array[0]],
+      role_name: roleName
     })
   }
   catch (err) {
@@ -60,7 +64,7 @@ const handleLogin = async (req, res, next) => {
         msg: "Error: Incorrect password"
       })
     }
-    else if (err.message == 'Erroe: User doesn\'t exists.') {
+    else if (err.message == 'User doesn\'t exists.') {
       res.status(400).json({
         ok: "false",
         msg: "User does not exist"

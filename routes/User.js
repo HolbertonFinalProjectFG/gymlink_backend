@@ -1,22 +1,27 @@
 const express = require('express');
 const User = express.Router();
-const { getAllUsers, postNewUser, deleteUser, putUsersData, getUserById, getUsersByRole } = require('../controllers/User');
+const { getAllUsers, postNewUser, deleteUser, putUsersData, getUserById, getUsersByRole, getTrainerClients } = require('../controllers/User');
 const { JwtMiddleware } = require('../middlewares/JwtMiddleware');
 const { PermissionsMiddleware } = require('../middlewares/RolePermissionsMiddleware');
+const { getRoutineById } = require('../controllers/Routines');
 
 User.use(JwtMiddleware)
 
 User.get('/', PermissionsMiddleware([1, 2, 3]), getAllUsers);
 
-User.get('/:user_id', PermissionsMiddleware([1, 2, 3]), getUserById); // Permissions for trainer??
+User.get('/:user_id', PermissionsMiddleware([1, 2, 3]), getUserById);
 
 User.get('/role/:role_id', PermissionsMiddleware([1, 2]), getUsersByRole);
 
-User.post('/', postNewUser);
+User.get('/trainer/clients', PermissionsMiddleware([3]), getTrainerClients);
 
-User.patch('/:user_id', PermissionsMiddleware([1]), putUsersData);
+User.post('/', PermissionsMiddleware([1, 2]), postNewUser);
 
-User.delete('/:user_id', PermissionsMiddleware([1]), deleteUser);
+User.post('/', PermissionsMiddleware([1, 2]), postNewUser);
+
+User.patch('/:user_id', PermissionsMiddleware([1, 2]), putUsersData);
+
+User.delete('/:user_id', PermissionsMiddleware([1, 2]), deleteUser);
 
 module.exports = {
     User

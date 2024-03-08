@@ -6,6 +6,7 @@ function verifyToken(token) {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
     return {ok: true, data: decoded};
   } catch (err) {
+    console.log(err)
     return {ok: false, data: err};
   }
 }
