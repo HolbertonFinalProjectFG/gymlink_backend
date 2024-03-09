@@ -33,7 +33,7 @@ on paper.
 Facundo is the project manager on Gymlink, he was in charge of organization, tasks, deadlines   and communication with the team.  
 He also developed the front end role, in charge of making designs and programming all  
 the visual portion of the app.  
-[![LinkedinLogo](../README_imgs/linkedin.png)](https://www.linkedin.com/in/facundosánchez/)
+[![LinkedinLogo](../linkedin.png)](https://www.linkedin.com/in/facundosánchez/)
 [![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/Facusan2016)
 ### Facundo Villagra ###
 Having the QA role Facundo was in charge of making the tests to make sure every  
