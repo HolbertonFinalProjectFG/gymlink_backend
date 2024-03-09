@@ -1,6 +1,5 @@
 # Gymlink #
 ### Efficient gym managing app ###
-***
 ## Index ##
 1. [Introduction](#introduction)
     * [What is Gymlink](#what-is-gymlink)
@@ -11,7 +10,7 @@
     * [Franco Musso](#franco-musso)
     * [Gabriel Rossy](#gabriel-rossy)
     * [Gaston Perego](#gaston-perego)
-3. [Tecnologies and tools](#tecnologies)
+3. [Tecnologies and tools](#tecnologies-and-tools)
 4. [Features](#features)
     * [SuperUser section](#superuser-section)
     * [Admin section](#admin-section)
@@ -34,31 +33,36 @@ on paper.
 Facundo is the project manager on Gymlink, he was in charge of organization, tasks, deadlines   and communication with the team.  
 He also developed the front end role, in charge of making designs and programming all  
 the visual portion of the app.  
-LinkedIn:
+[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/facundosánchez/)
+[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/Facusan2016)
 ### Facundo Villagra ###
 Having the QA role Facundo was in charge of making the tests to make sure every  
 aspect of the program worked correctly.
 Being a backend he was part of the creation of the API used to get all the  
 data for the front end part.  
-LinkedIn:
+[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/facundo-villagra-/)
+[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/FacundoV21)
 ### Franco Musso ###
 As a DevOps, Franco had to construct and design the working enviroment for  
 the rest of the team to work on, also managing the worflow of the project.  
 Franco is also part of the backend team, working on the API and the communication  
 with the front end.  
-LinkedIn:
+[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/franco-musso/)
+[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/FrancoMuVa)
 ### Gabriel Rossy ###
 Gabriel is has the UX & UI role, as well as the frontend developer role, he was  
 part of the design of the visual aspect of the app, but with enphasis on the  
 user experience and interface, trying to make it easy to use for all kinds  
-of people.
-LinkedIn:
+of people.  
+[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/gabriel-rossy-baptista-y-vedia/)
+[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/gaboxdeveloper)
 ### Gaston Perego ###
 As a DevOps Gaston worked with franco in the creation of the working enviroment and  
 the project workflow.  
 Gaston also worked as a full stack developer, helping on both the backend and  
 frontend teams.  
-LinkedIn:
+[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/gaston-perego-7487a6294/)
+[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/gastonperego)
 ***
 ## Tecnologies and tools ##
 `NodeJS` 
@@ -92,11 +96,3 @@ it to a client.
 ### See routine section ###
 By using a link (may change in future versions) a client of  
 the gym is able to see the routine a trainer asigned to them.
-***
-## Authors ##
-Facundo Sanchez  
-Facundo Villagra  
-Franco Musso  
-Gabriel Rossy  
-Gaston Perego
-***
