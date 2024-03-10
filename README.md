@@ -69,7 +69,7 @@ frontend teams.
 ### Express ###  
 [![ExpressLogo](README_imgs/express-js.png)](https://expressjs.com)  
 ### Zod ###  
-[![ZodLogo](README_imgs/Zod.png)](https://zod.dev)  
+[![ZodLogo](README_imgs/zod.png)](https://zod.dev)  
 ### Sequelize ###  
 [![SequelizeLogo](README_imgs/sequelize.png)](https://sequelize.org)
 ### PostgreSQL ###  
