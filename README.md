@@ -16,7 +16,6 @@
     * [Admin section](#admin-section)
     * [Trainer section](#trainer-section)
     * [See routine section](#see-routine-section)
-5. [Authors](#authors)
 ***
 ## Introduction ##
 ### What is Gymlink ###
@@ -34,44 +33,51 @@ Facundo is the project manager on Gymlink, he was in charge of organization, tas
 He also developed the front end role, in charge of making designs and programming all  
 the visual portion of the app.  
 [![LinkedinLogo](README_imgs/linkedin.png)](https://www.linkedin.com/in/facundosánchez/)
-[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/Facusan2016)
+[![GithubLogo](README_imgs/github.png)](https://github.com/Facusan2016)
 ### Facundo Villagra ###
 Having the QA role Facundo was in charge of making the tests to make sure every  
 aspect of the program worked correctly.
 Being a backend he was part of the creation of the API used to get all the  
 data for the front end part.  
-[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/facundo-villagra-/)
-[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/FacundoV21)
+[![LinkedinLogo](README_imgs/linkedin.png)](https://www.linkedin.com/in/facundo-villagra-/)
+[![GithubLogo](README_imgs/github.png)](https://github.com/FacundoV21)
 ### Franco Musso ###
 As a DevOps, Franco had to construct and design the working enviroment for  
 the rest of the team to work on, also managing the worflow of the project.  
 Franco is also part of the backend team, working on the API and the communication  
 with the front end.  
-[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/franco-musso/)
-[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/FrancoMuVa)
+[![LinkedinLogo](README_imgs/linkedin.png)](https://www.linkedin.com/in/franco-musso/)
+[![GithubLogo](README_imgs/github.png)](https://github.com/FrancoMuVa)
 ### Gabriel Rossy ###
 Gabriel is has the UX & UI role, as well as the frontend developer role, he was  
 part of the design of the visual aspect of the app, but with enphasis on the  
 user experience and interface, trying to make it easy to use for all kinds  
 of people.  
-[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/gabriel-rossy-baptista-y-vedia/)
-[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/gaboxdeveloper)
+[![LinkedinLogo](README_imgs/linkedin.png)](https://www.linkedin.com/in/gabriel-rossy-baptista-y-vedia/)
+[![GithubLogo](README_imgs/github.png)](https://github.com/gaboxdeveloper)
 ### Gaston Perego ###
 As a DevOps Gaston worked with franco in the creation of the working enviroment and  
 the project workflow.  
 Gaston also worked as a full stack developer, helping on both the backend and  
 frontend teams.  
-[![LinkedinLogo](/gymlink_backend/README_imgs/linkedin.png)](https://www.linkedin.com/in/gaston-perego-7487a6294/)
-[![GithubLogo](/gymlink_backend/README_imgs/github.png)](https://github.com/gastonperego)
+[![LinkedinLogo](README_imgs/linkedin.png)](https://www.linkedin.com/in/gaston-perego-7487a6294/)
+[![GithubLogo](README_imgs/github.png)](https://github.com/gastonperego)
 ***
 ## Tecnologies and tools ##
-`NodeJS` 
-`Express`
-`Zod`
-`Sequelize`
-`PostgreSQL`
-`DBeaver`
-`Postman`
+### NodeJS ###  
+[![NodeJSLogo](README_imgs/node-js.png)](https://nodejs.org/en)  
+### Express ###  
+[![ExpressLogo](README_imgs/express-js.png)](https://expressjs.com)  
+### Zod ###  
+[![ZodLogo](README_imgs/Zod.png)](https://zod.dev)  
+### Sequelize ###  
+[![SequelizeLogo](README_imgs/sequelize.png)](https://sequelize.org)
+### PostgreSQL ###  
+[![PostgreSQLLogo](README_imgs/PostgreSQL.png)](https://www.postgresql.org)
+### DBeaver ###  
+[![DBeaverLogo](README_imgs/DBeaver_logo.png)](https://dbeaver.io)
+### Postman ###  
+[![PostmanLogo](README_imgs/postman.png)](https://www.postman.com)
 ***
 ## Features ##
 ### SuperUser section ###
