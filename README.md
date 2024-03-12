@@ -1,3 +1,4 @@
+[![GymLink Banner](README_imgs/GymLink%20DEMO%20DAY.jpg)](https://gymlink.tech)
 # Gymlink #
 ### Efficient gym managing app ###
 ## Index ##
