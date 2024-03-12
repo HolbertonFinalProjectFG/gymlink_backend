@@ -42,7 +42,6 @@ const getUserById = async(req, res) => {
       CI: user.CI,
       email: user.email,
       birth_date: user.birth_date,
-      password: user.password,
       phone_number: user.phone_number,
       emergency_number: user.emergency_number,
       insurance: user.insurance,
